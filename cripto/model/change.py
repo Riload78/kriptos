@@ -1,7 +1,7 @@
 from flask import app
 import requests
-from config import apikey
-from helper.date import convert_date
+from cripto.config import apikey
+from cripto.helper.date import convert_date
 import json
 
 class Rates():
@@ -16,11 +16,11 @@ class Rates():
             response = requests.get(url)
             data = response.json()
             if response.status_code == 200:
-                return True, data['rate']
+                return ('status','succes'), ('rate',data['rate']), ('monedas',['EUR','Falta definir monendas posibles???'])
             else:
-                return False, data["error"]
+                return 'fail', data["error"]
         except requests.exceptions.RequestException as e:
-            return False, str(e)
+            return ('status','fail'), ('mensaje',str(e))
         
     def get_list_cripto(self):
         url = f"https://rest.coinapi.io/v1/assets?apikey={apikey}"
@@ -45,9 +45,3 @@ class Rates():
         except requests.exceptions.RequestException as e:
             return False, str(e)
         
-
-data = Rates('EUR','ETMN')
-change = data.get_rate()
-crypto_list = data.get_list_cripto()
-print(crypto_list)
-print(change)

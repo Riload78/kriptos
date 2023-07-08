@@ -52,12 +52,14 @@ class MovementDAO:
         self.path = db_path
 
         query = """
-        CREATE TABLE IF NOT EXISTS "movements" (
-            "id"	INTEGER UNIQUE,
-            "date"	TEXT NOT NULL,
-            "abstract"	TEXT NOT NULL,
-            "amount"	REAL NOT NULL,
-            "currency"	TEXT NOT NULL,
+       CREATE TABLE "criptos" (
+            "id" INTEGER,
+            "date" TEXT NOT NULL,
+            "time" TEXT NOT NULL,
+            "moneda_from" TEXT NOT NULL,
+            "cantidad_from" REAL NOT NULL,
+            "moneda_to"	TEXT NOT NULL,
+            "cantidad_to" REAL NOT NULL,
             PRIMARY KEY("id" AUTOINCREMENT)
         );
         """
@@ -84,8 +86,8 @@ class MovementDAO:
 
     def get(self, id):
         query = """
-        SELECT date, abstract, amount, currency, id
-          FROM movements
+        SELECT id, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to
+          FROM criptos
          WHERE id = ?;
         """
         conn = sqlite3.connect(self.path)
@@ -99,9 +101,9 @@ class MovementDAO:
         
     def get_all(self):
         query = """
-        SELECT date, abstract, amount, currency, id
+        SELECT id, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to
           FROM movements
-         ORDER by date;
+         ORDER by id;
         """
         conn = sqlite3.connect(self.path)
         cur = conn.cursor()
