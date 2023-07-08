@@ -1,31 +1,27 @@
-import json
 from cripto import app
 from flask import render_template
 from cripto.model.movement import MovementDAO
 from cripto.model.change import Rates
+from cripto.config import path_database
 
 ##config = app.config
-dao = MovementDAO(app.config.get('PATH_SQLITE', 'valor_por_defecto'))
+dao = MovementDAO(path_database)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/api/v1/all', methods=['GET'])
+@app.route('/api/v1/movimientos', methods=['GET'])
 def get_all():
     movements = dao.get_all()
-    return 'HOLA API'
+    return movements 
 
 @app.route('/api/v1/tasa/<from_moneda>/<to_moneda>', methods=['GET'])
 def get_rates(from_moneda,to_moneda):
     rates = Rates(from_moneda,to_moneda)
     rate = rates.get_rate()
-    print(rate)
-    diccionario = dict(rate)
-    #convert to JSON string
-    jsonStr = json.dumps(diccionario)
     
-    return jsonStr
+    return rate
 
 @app.route('/api/v1/movimiento', methods=['POST'])
 def insert():

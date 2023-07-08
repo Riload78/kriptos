@@ -1,7 +1,7 @@
 from flask import app
 import requests
 from cripto.config import apikey
-from cripto.helper.date import convert_date
+from cripto.helper.json import to_json
 import json
 
 class Rates():
@@ -16,7 +16,9 @@ class Rates():
             response = requests.get(url)
             data = response.json()
             if response.status_code == 200:
-                return ('status','succes'), ('rate',data['rate']), ('monedas',['EUR','Falta definir monendas posibles???'])
+                res = ('status','succes'), ('rate',data['rate']), ('monedas',['EUR','Falta definir monendas posibles???'])
+                data = to_json(res)
+                return data
             else:
                 return 'fail', data["error"]
         except requests.exceptions.RequestException as e:
