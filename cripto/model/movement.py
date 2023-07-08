@@ -1,5 +1,8 @@
 from datetime import date
 import sqlite3
+import os
+from cripto.helper.json import to_json
+
 CURRENCIES = ("EUR", "USD")
 
 class Movement:
@@ -50,31 +53,32 @@ class Movement:
 class MovementDAO:
     def __init__(self, db_path):
         self.path = db_path
-
-        query = """
-       CREATE TABLE "criptos" (
-            "id" INTEGER,
-            "date" TEXT NOT NULL,
-            "time" TEXT NOT NULL,
-            "moneda_from" TEXT NOT NULL,
-            "cantidad_from" REAL NOT NULL,
-            "moneda_to"	TEXT NOT NULL,
-            "cantidad_to" REAL NOT NULL,
-            PRIMARY KEY("id" AUTOINCREMENT)
-        );
-        """
+        # Falta por comprobar -> Borrar BBDD y probar si la crea
+        if not os.path.isfile(db_path):
+            query = """
+                CREATE TABLE "criptos" (
+                        "id" INTEGER,
+                        "date" TEXT NOT NULL,
+                        "time" TEXT NOT NULL,
+                        "moneda_from" TEXT NOT NULL,
+                        "cantidad_from" REAL NOT NULL,
+                        "moneda_to"	TEXT NOT NULL,
+                        "cantidad_to" REAL NOT NULL,
+                        PRIMARY KEY("id" AUTOINCREMENT)
+                    );
+            """
         
-        conn = sqlite3.connect(self.path)
-        cur = conn.cursor()
-        cur.execute(query)
-        conn.close()
+            conn = sqlite3.connect(self.path)
+            cur = conn.cursor()
+            cur.execute(query)
+            conn.close()
 
     def insert(self, movement):
 
         query = """
-        INSERT INTO movements
-               (date, abstract, amount, currency)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO criptos
+               (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to)
+        VALUES (?, ?, ?, ?, ?, ?)
         """
 
         conn = sqlite3.connect(self.path)
@@ -100,32 +104,47 @@ class MovementDAO:
 
         
     def get_all(self):
-        query = """
-        SELECT id, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to
-          FROM movements
-         ORDER by id;
-        """
-        conn = sqlite3.connect(self.path)
-        cur = conn.cursor()
-        cur.execute(query)
-        res = cur.fetchall()
-        lista = []
-        for reg in res:
-            lista.append(
-                {
-                    "date": reg[0],
-                    "abstract": reg[1],
-                    "amount": reg[2],
-                    "currency": reg[3],
-                    "id": reg[4]
-                }
-            )
-        conn.close()
-        return lista
+        
+        try:
+            query = """
+                SELECT id, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to
+                FROM criptos
+                ORDER by id;
+            """
+            conn = sqlite3.connect(self.path)
+            cur = conn.cursor()
+            cur.execute(query)
+            res = cur.fetchall()
+            movimientos = []
+            for reg in res:
+                movimientos.append(
+                    {
+                        "id": reg[0],
+                        "date": reg[1],
+                        "time": reg[2],
+                        "moneda_from": reg[3],
+                        "cantidad_from": reg[4],
+                        "moneda_to": reg[5],
+                        "cantidad_to": reg[6]
+                    }
+                )
+                
+            conn.close()
+            
+            response = ("status","succes"),('data',movimientos)
+            data = to_json(response)
+            
+            return data
+        
+        except sqlite3.Error as e:
+            # Manejo de la excepción específica de SQLite
+            error_message = f"Error de SQLite: {str(e)}"
+            return error_message
+        
 
     def update(self, id, movement):
         query = """
-        UPDATE movements
+        UPDATE criptos
            SET date = ?, abstract = ?, amount = ?, currency = ?
          WHERE id = ?;
         """
