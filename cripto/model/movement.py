@@ -1,18 +1,24 @@
-from datetime import date
+from datetime import datetime
 import sqlite3
 import os
 from cripto.helper.json import to_json
 
-CURRENCIES = ("EUR", "USD")
+CURRENCIES = ("EUR", "BTC", "ETH", "USDT", "BNB", "XRP", "ADA", "SOL", "DOT", "MATIC")
 
 class Movement:
-    def __init__(self, input_date, abstract, amount, currency, id = None):
-        self.date = input_date
+    def __init__(self, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to, id = None):
         self.id = id
+        self.date = date
+        self.time = time
+        self.moneda_from = moneda_from
+        self.cantidad_from = cantidad_from
+        self.moneda_to = moneda_to
+        self.cantidad_to = cantidad_to
+        
 
-        self.abstract = abstract
+        """ self.abstract = abstract
         self.amount = amount
-        self.currency = currency
+        self.currency = currency """
 
     @property
     def date(self):
@@ -20,10 +26,36 @@ class Movement:
     
     @date.setter
     def date(self, value):
-        self._date = date.fromisoformat(value)
-        if self._date > date.today():
-            raise ValueError("date must be today or lower")
+        now = datetime.now()
+        self._date = value
+        if self._date != now.strftime("%Y-%m-%d"):
+            raise ValueError("date must be today")
         
+    @property
+    def time(self):
+        return self._time
+    
+    @time.setter
+    def time(self, value):
+        now = datetime.now()
+        self._time = value
+        if self._time != now.strftime("%H:%M:%S"):
+            raise ValueError("time must be current hour and minute")
+        
+    @property
+    def moneda_from(self):
+        return self._moneda_from
+    
+    @moneda_from.setter
+    def moneda_from(self,value):
+        self._moneda_from = value
+        if self.moneda_from not in CURRENCIES:
+            raise ValueError(f"{self.moneda_from} is an invalid currency code.")
+        elif self.moneda_from != 'EUR':
+            # Se debe comproba que existe saldo suficiente antes de grabar el movimiento 
+            pass
+                  
+       
     @property
     def amount(self):
         return self._amount
@@ -45,10 +77,12 @@ class Movement:
             raise ValueError(f"currency must be in {CURRENCIES}")
 
     def __eq__(self, other):
-        return self.date == other.date and self.abstract == other.abstract and self.amount == other.amount and self.currency == other.currency
+        return self.date == other.date and self.time == other.time and self.moneda_from == other.moneda_from and self.cantidad_from == other.cantidad_from and self.moneda_to == other.moneda_to and self.cantidad_to == other.cantidad_to
 
     def __repr__(self):
-        return f"Movimiento: {self.date} - {self.abstract} - {self.amount} {self.currency}"
+        return f"Movimiento: {self.date} - {self.time} - {self.moneda_from} - {self.cantidad_from} - {self.moneda_to} - {self.cantidad_to}"
+    
+    
 
 class MovementDAO:
     def __init__(self, db_path):
@@ -87,7 +121,9 @@ class MovementDAO:
                             movement.amount, movement.currency))
         conn.commit()
         conn.close()
-
+        
+        
+    # en principio no se va usar -> eliminar en el repaso del codigo si procede
     def get(self, id):
         query = """
         SELECT id, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to
@@ -155,6 +191,8 @@ class MovementDAO:
         conn.commit()
         conn.close()
         
+        
+    # en principio no se va usar -> eliminar en el repaso del codigo si procede    
     def to_dict(self):
         return{
             "id": self.id,

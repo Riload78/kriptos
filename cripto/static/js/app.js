@@ -19,6 +19,7 @@ const getMovements = () => {
       })
       .then(function () {
         // función que siempre se ejecuta
+        console.log('en then');
       });
 }
 
