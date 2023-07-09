@@ -51,21 +51,38 @@ class Movement:
         self._moneda_from = value
         if self.moneda_from not in CURRENCIES:
             raise ValueError(f"{self.moneda_from} is an invalid currency code.")
-        elif self.moneda_from != 'EUR':
-            # Se debe comproba que existe saldo suficiente antes de grabar el movimiento 
-            pass
-                  
        
+        
     @property
-    def amount(self):
-        return self._amount
+    def cantidad_from(self):
+        return self._cantidad_from
     
-    @amount.setter
-    def amount(self, value):
-        self._amount = float(value)
-        if self._amount == 0:
+    @cantidad_from.setter
+    def cantidad_from(self, value):
+        self._cantidad_from = float(value)
+        if self._cantidad_from == 0:
             raise ValueError("amount must be positive or negative")
         
+    @property
+    def moneda_to(self):
+        return self._moneda_to
+    
+    @moneda_to.setter
+    def moneda_to(self,value):
+        self._moneda_to = value
+        if self.moneda_to not in CURRENCIES:
+            raise ValueError(f"{self.moneda_to} is an invalid currency code.")  
+        
+    @property
+    def cantidad_to(self):
+        return self._cantidad_to
+    
+    @cantidad_to.setter
+    def cantidad_to(self, value):
+        self._cantidad_to = float(value)
+        if self._cantidad_to == 0:
+            raise ValueError("amount must be positive or negative")
+    
     @property
     def currency(self):
         return self._currency
@@ -108,21 +125,81 @@ class MovementDAO:
             conn.close()
 
     def insert(self, movement):
+        # Validar if Moneda_from != EUR : Comprobar saldo 
+        if movement.moneda_from == "EUR" or self.get_saldo(movement.moneda_from) == True:
+            try:
+                # comment: 
+                query = """
+                INSERT INTO criptos
+                    (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """
 
+                conn = sqlite3.connect(self.path)
+                cur = conn.cursor()
+                cur.execute(query, (movement.date, movement.time,movement.moneda_from, movement.cantidad_from,
+                                    movement.moneda_to, movement.cantidad_to))
+                conn.commit()
+                conn.close()
+                
+                return ('status','success'), ('id','Id creado ???'), ('monedas', ["EUR", "...Esto hay que terminar"])
+                
+            except Exception as e:
+                return ('status','fail'), ('mensaje',str(e))
+            # end try
+        else:
+           
+            return ('status','fail'), ('mensaje','Mensaje de error. ultimo else del insert')
+                   
+        
+    def get_saldo(self,moneda):
+
+        saldo = self.get_cantidades_to(moneda) - self.get_cantidades_from(moneda)
+        
+        print(saldo)
+        if saldo > 0 :
+            return True
+        else :
+            return ('status','fail'), ('mensaje','Saldo insificiente')
+    
+    def get_cantidades_to(self, moneda):
+        
         query = """
-        INSERT INTO criptos
-               (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to)
-        VALUES (?, ?, ?, ?, ?, ?)
-        """
-
+            SELECT SUM(cantidad_to) AS sumatorio
+            FROM criptos
+            WHERE MONEDA_TO = ?
+            """
         conn = sqlite3.connect(self.path)
         cur = conn.cursor()
-        cur.execute(query, (movement.date, movement.abstract,
-                            movement.amount, movement.currency))
-        conn.commit()
+        cur.execute(query,(moneda,))
+        res = cur.fetchone()
         conn.close()
+        if res :
+            print(type(res[0]))
+            return res[0]
+        else:
+            return 'get_cantidades_to respuesta de error. Revisar'
         
-        
+    
+    def get_cantidades_from(self, moneda):
+        query = """
+            SELECT SUM(cantidad_from) AS sumatorio
+            FROM criptos
+            WHERE MONEDA_TO = ?
+            """
+        conn = sqlite3.connect(self.path)
+        cur = conn.cursor()
+        cur.execute(query,(moneda,))
+        res = cur.fetchone()
+        conn.close()
+        if res :
+            print(type(res[0]))
+            return res[0]
+        else:
+            return 'get_cantidades_from respuesta de error. Revisar'
+    
+    
+    
     # en principio no se va usar -> eliminar en el repaso del codigo si procede
     def get(self, id):
         query = """
@@ -177,7 +254,7 @@ class MovementDAO:
             error_message = f"Error de SQLite: {str(e)}"
             return error_message
         
-
+    # en principio no se va usar -> eliminar en el repaso del codigo si procede
     def update(self, id, movement):
         query = """
         UPDATE criptos

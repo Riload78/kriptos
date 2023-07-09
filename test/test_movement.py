@@ -42,6 +42,39 @@ def test_moneda_from_not_in_currencies():
         time = now.strftime("%H:%M:%S")
         m = Movement(date,time,"HHH",1000,"BTC",0.23)
         
-    
+
+## Falta por comprobar -> Hay que hecer el método que se traiga el saldo 
+# antes de grabar el movimiento
 def test_moneda_from_not_equal_euro():
-   pass
+    now = datetime.now()
+    date = now.strftime("%Y-%m-%d")
+    time = now.strftime("%H:%M:%S")
+    m = Movement(date,time,"ETH",1000,"BTC",0.23)
+    
+def test_cantidad_from_not_cero():
+    with pytest.raises(ValueError):
+        now = datetime.now()
+        date = now.strftime("%Y-%m-%d")
+        time = now.strftime("%H:%M:%S")
+        m = Movement(date,time,"EUR",0,"BTC",0.23)
+        
+def test_moneda_to_equal_euro():        
+    now = datetime.now()
+    date = now.strftime("%Y-%m-%d")
+    time = now.strftime("%H:%M:%S")
+    m = Movement(date,time,"BTC",1000,"EUR",0.23)
+    assert m.moneda_to == "EUR"
+    
+def test_moneda_to_not_in_currencies():
+    with pytest.raises(ValueError):
+        now = datetime.now()
+        date = now.strftime("%Y-%m-%d")
+        time = now.strftime("%H:%M:%S")
+        m = Movement(date,time,"HHH",1000,"BTC",0.23)
+        
+def test_cantidad_to_not_cero():
+    with pytest.raises(ValueError):
+        now = datetime.now()
+        date = now.strftime("%Y-%m-%d")
+        time = now.strftime("%H:%M:%S")
+        m = Movement(date,time,"EUR",0,"BTC",0)
