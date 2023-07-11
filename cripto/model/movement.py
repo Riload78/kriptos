@@ -279,5 +279,35 @@ class MovementDAO:
             "currency": self.currency
             
         }
+        
+    def get_wallets(self):
+        try:
+
+            query = """ 
+                SELECT DISTINCT moneda_from 
+                FROM "criptos"; 
+            """
+            
+            conn = sqlite3.connect(self.path)
+            cur = conn.cursor()
+            cur.execute(query)
+            res = cur.fetchall()
+            wallets = []
+            print(res)
+            for reg in res:
+                wallets.append(reg[0])
+            
+            if res :
+                response = ("status","succes"),('wallet',wallets)
+                data = to_json(response)
+                
+                return data
+            
+            else :
+                return ('status','fail'), ('mensaje','Not items found')
+                
+        except sqlite3.Error as e:
+            error_message = f"Error de SQLite: {str(e)}"
+            return ('status','fail'), ('mensaje',error_message)
 
 

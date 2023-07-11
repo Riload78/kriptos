@@ -1,55 +1,57 @@
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#buycriptoModal">
+
+<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#buycriptoModal"
+    aria-expanded="false" aria-controls="collapseWidthExample">
     Iniciar una compra
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="buycriptoModal" tabindex="-1" aria-labelledby="buycriptoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="collapse collapse-horizontal fade" id="buycriptoModal">
+    <div class=" modal-lg mt-3">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="buycriptoModalLabel">Compra/Venta criptomonedas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
             </div>
             <div class="modal-body">
                 <form action="">
                     <div class="row">
-                        <form action="#">
-                            <div class="col-md-6 col-lg-6">
-                                 <div class="mb-3">
-                                    <label class="form-label">From:</label>
-                                    <select id="from" class="form-select" aria-label="Selecionar una moneda">
-                                        <option selected>Selecione una moneda</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Q:</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="qty" placeholder="Cantidad">
-                                        <button id="calculate-rate" class="btn btn-outline-secondary" type="button" id="button-addon1">Calcular</button>
-                                    </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">From:</label>
+                                <select id="from" class="form-select" aria-label="Selecionar una moneda">
+                                    <option selected>Selecione una moneda</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Q:</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="qty" placeholder="Cantidad">
+                                    <button id="calculate-rate" class="btn btn-outline-secondary" type="button"
+                                        id="button-addon1">Calcular</button>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">To:</label>
-                                    <select id="to" class="form-select" aria-label="Default select example">
-                                        <option value="" selected>Selecciona la moneda de cambio</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <div id="result-q" class="result-q">
-                                        <label class="form-label">Q:</label>
-                                        <input id="qty-hidden" type="hidden" name="qty-hidden">
-                                    </div>
-                                    <div id="result-pu" class="result-precio">
-                                        <label class="form-label">PU:</label>
-                                        <input id="pu-hidden" type="hidden" name="pu-hidden">
-                                    </div>
-                                    
-                                </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">To:</label>
+                                <select id="to" class="form-select" aria-label="Default select example">
+                                    <option value="" selected>Selecciona la moneda de cambio</option>
+                                </select>
                             </div>
-                        </form>                  
+                            <div class="mb-3">
+                                <div id="result-q" class="result-q">
+                                    <label class="form-label">Q:</label>
+                                    <input id="qty-hidden" type="hidden" name="qty-hidden">
+                                </div>
+                                <div id="result-pu" class="result-precio">
+                                    <label class="form-label">PU:</label>
+                                    <input id="pu-hidden" type="hidden" name="pu-hidden">
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>

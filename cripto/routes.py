@@ -4,8 +4,8 @@ from flask import render_template, request
 from cripto.model.movement import Movement, MovementDAO
 from cripto.model.change import Rates
 from cripto.config import path_database
+import sqlite3
 
-##config = app.config
 dao = MovementDAO(path_database)
 
 @app.route('/')
@@ -43,13 +43,30 @@ def insert():
             
             dao.insert(Movement(date,time,moneda_from,cantidad_from,moneda_to,cantidad_to))
             
-            postman = f"Date:{date}\nTime: {time}\nMoneda_from: {moneda_from}\nCantidad_from: {cantidad_from}\nMoneda_to: {moneda_to}\nCantidad_to: {cantidad_to}"
-            return (postman, 200, {"Access-Control-Allow-Origin": "*"})
-        except Exception as e:
-            raise e
-        # end try
+            response = {
+            "is_ok": True,
+            "data": None
+            }
+            return response
+        except ValueError as e:
+            response = {
+                "is_ok": False,
+                "data": str(e)
+            }
+            return response, 400
+        except sqlite3.Error as e:
+            response = {
+                "is_ok": False,
+                "data": "Error en base de datos."
+            }
+            return response, 400
         
 
 @app.route('/api/v1/status', methods=['GET'])
 def get_status():
     return 'Status'
+
+@app.route('/api/v1/wallets')
+def get_wallets():
+    wallets = dao.get_wallets()
+    return wallets

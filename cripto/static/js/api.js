@@ -4,12 +4,21 @@ const getCurrenciesyTo = () => {
     for (const currency of currencies){
        option = `<option value="${currency}">${currency}</option>`
 
-       toCurency.innerHTML += option
+       toCurrency.innerHTML += option
     }
 }
 
 const gerCurrenciesFrom = () => {
-
+    const url = '/api/v1/wallets'
+    fetch(url)
+        .then(response => response.json())
+        .then(function(data){
+            for (const currency of data.wallet){
+                option = `<option value="${currency}">${currency}</option>`
+         
+                fromCurrency.innerHTML += option
+             }
+        })
 }
 
 
@@ -60,7 +69,7 @@ const showMovements = (movements) => {
 const getRate = () => {
 
     const value_from = fromCurrency.value;
-    const value_to = toCurency.value;
+    const value_to = toCurrency.value;
     const qtyInput = qty.value
 
     const validate = validation(value_from,value_to,qtyInput)
@@ -70,7 +79,6 @@ const getRate = () => {
         fetch(url)
             .then(response => response.json())
             .then(function(data){
-                console.log(data);
                 let range = data.rate
                 pu.innerHTML = `PU: ${range}`
                 puInput.value = range
@@ -98,6 +106,44 @@ const validation = (field1,filed2,qty) => {
 const saveMovement = () => {
     console.log('paso por aqui');
 
+    const moneda_from = fromCurrency.value
+    const moneda_to   = toCurrency.value
+    const cantidad_from = qty.value
+    const cantidad_to = resultInput.value
+
+    const url = '/api/v1/movimiento'
+    let data = {
+        "moneda_from": moneda_from,
+        "cantidad_from": parseFloat(cantidad_from),
+        "moneda_to"  : moneda_to ,
+        "cantidad_to": cantidad_to
+    }
+
+    let fechData = {
+        method:'POST',
+        body:JSON.stringify(data),
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }
+
+    fetch(url, fechData)
+        .then(response => response.json())
+        .then(processInsert)
+
+
+}
+
+const processInsert = (data) => {
+    console.log(data);
+    if (data.is_ok) {
+        let tableBody = document.querySelector('#movements-table tbody')
+        tableBody.innerHTML = ''
+        getMovements()
+    } else {
+        alert("Error en insercion")
+    }
 }
 
 
