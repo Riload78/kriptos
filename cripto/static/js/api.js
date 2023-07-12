@@ -1,6 +1,6 @@
-const currencies = ["EUR",'BTC','RTH','USDT','BNB','XRP','ADA','SOL','DOT','MATIC']
+const currencies = ["EUR",'BTC','ETH','USDT','BNB','XRP','ADA','SOL','DOT','MATIC']
 
-const getCurrenciesyTo = () => {
+const getCurrenciesTo = () => {
     for (const currency of currencies){
        option = `<option value="${currency}">${currency}</option>`
 
@@ -8,48 +8,63 @@ const getCurrenciesyTo = () => {
     }
 }
 
-const gerCurrenciesFrom = () => {
+const getCurrenciesFrom = () => {
     const url = '/api/v1/wallets'
+   
     fetch(url)
         .then(response => response.json())
-        .then(function(data){
-            for (const currency of data.wallet){
-                option = `<option value="${currency}">${currency}</option>`
-         
+        .then(function(res){
+            console.log(res)
+            if(res.data.length >= 1){
+                fromCurrency.options.length=1 // remove all options firstly
+                console.log('por aqui');
+                const wallets = res.data
+                for (const currency of wallets){
+                    
+                    option = `<option value="${currency}">${currency}</option>`
+             
+                    fromCurrency.innerHTML += option
+                    
+                 }
+                 
+            } else {
+
+                option = `<option value="EUR">EUR</option>`
                 fromCurrency.innerHTML += option
-             }
+                
+            }
         })
 }
 
 
-const getMovements = () => {  // cambiar llamada a fetch  y quitar axios
+const getMovements = () => { 
+    const url = '/api/v1/movimientos'
 
-    axios.get('http://127.0.0.1:5001/api/v1/movimientos')
-      .then(function (response) {
-        // función que se ejecutará al recibir una respuesta
-        
-        
-        const movementsData = response.data;
-        if (movementsData.status == 'succes'){
-            showMovements(movementsData.data)
-           
-        }else{  // creo que esto hay que meterlo en el catch
-            alert(`Error ${movementsData.mensaje}`)
-        }
-      })
-      .catch(function (error) {
-        // función para capturar el error
-        console.log(error);
-      })
-      .then(function () {
-        // función que siempre se ejecuta
-        console.log('en then');
-      });
+    fetch(url)
+        .then(response => response.json())
+        .then(function(res){
+            console.log(res)
+            const movementsData = res;
+            if (movementsData.status == 'success'){
+                if(movementsData.data.length == 0){
+                    return noResultsFound()
+                }else {
+                    
+                    tableEmpty.innerHTML = ''
+                    return showMovements(movementsData.data)
+                }
+               
+            }else{  // creo que esto hay que meterlo en el catch
+                alert(`Error ${movementsData.mensaje}`)
+            }
+        })
+        .catch(processError)
+      
 }
 
 const showMovements = (movements) => {
 
-    let tableBody = document.querySelector('#movements-table tbody')
+    
     movements.forEach((movement) => {
 
         let item = `<tr>  
@@ -64,6 +79,11 @@ const showMovements = (movements) => {
 
         tableBody.innerHTML += item
     })
+}
+
+const noResultsFound = () => {
+    let emptyMessage = ' <div class="alert alert-primary text-center" role="alert">No hay registros</div>'
+    tableEmpty.innerHTML = emptyMessage
 }
 
 const getRate = () => {
@@ -131,6 +151,7 @@ const saveMovement = () => {
     fetch(url, fechData)
         .then(response => response.json())
         .then(processInsert)
+        .catch(processError)
 
 
 }
@@ -140,11 +161,29 @@ const processInsert = (data) => {
     if (data.is_ok) {
         let tableBody = document.querySelector('#movements-table tbody')
         tableBody.innerHTML = ''
+        qty.value = ""
+        resetSelect(fromCurrency)
+        resetSelect(toCurrency)
+        result.innerHTML="Q:"
+        pu.innerHTML="PU"
+        getCurrenciesFrom()
         getMovements()
+
     } else {
-        alert("Error en insercion")
+        alert(data.data)
     }
 }
+
+const processError = (error) =>{
+    alert('Se ha producido el siguiente error: ' + error)
+}
+
+const resetSelect = (select) =>{
+    for (var i = 0, l = select.length; i < l; i++) {
+        select[i].selected = select[i].defaultSelected;
+    }
+}
+
 
 
 

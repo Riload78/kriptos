@@ -7,15 +7,18 @@ const pu = document.querySelector('#result-pu .form-label')
 const result = document.querySelector('#result-q .form-label')
 const puInput = document.querySelector('#pu-hidden')
 const resultInput = document.querySelector('#qty-hidden')
+const tableBody = document.querySelector('#movements-table tbody')
+const tableEmpty =  document.querySelector('#empty')
 
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
     getMovements()
-    getCurrenciesyTo()
-    gerCurrenciesFrom()
+    getCurrenciesTo()
+    getCurrenciesFrom()
     calculateRate.addEventListener('click', getRate)
     btnSaveMovement.addEventListener('click', saveMovement)
+
 
 });
 

@@ -244,29 +244,12 @@ class MovementDAO:
                 
             conn.close()
             
-            response = ("status","succes"),('data',movimientos)
-            data = to_json(response)
-            
-            return data
+            return movimientos
         
         except sqlite3.Error as e:
             # Manejo de la excepción específica de SQLite
             error_message = f"Error de SQLite: {str(e)}"
             return error_message
-        
-    # en principio no se va usar -> eliminar en el repaso del codigo si procede
-    def update(self, id, movement):
-        query = """
-        UPDATE criptos
-           SET date = ?, abstract = ?, amount = ?, currency = ?
-         WHERE id = ?;
-        """
-
-        conn = sqlite3.connect(self.path)
-        cur = conn.cursor()
-        cur.execute(query, (movement.date, movement.abstract, movement.amount, movement.currency, id))
-        conn.commit()
-        conn.close()
         
         
     # en principio no se va usar -> eliminar en el repaso del codigo si procede    
@@ -284,7 +267,7 @@ class MovementDAO:
         try:
 
             query = """ 
-                SELECT DISTINCT moneda_from 
+                SELECT DISTINCT moneda_to 
                 FROM "criptos"; 
             """
             
@@ -292,19 +275,18 @@ class MovementDAO:
             cur = conn.cursor()
             cur.execute(query)
             res = cur.fetchall()
-            wallets = []
-            print(res)
-            for reg in res:
-                wallets.append(reg[0])
+            wallets = ["EUR"]
+ 
             
             if res :
-                response = ("status","succes"),('wallet',wallets)
-                data = to_json(response)
+                for reg in res:
+                    wallets.append(reg[0])
                 
-                return data
+                return wallets
             
             else :
-                return ('status','fail'), ('mensaje','Not items found')
+                
+                return wallets
                 
         except sqlite3.Error as e:
             error_message = f"Error de SQLite: {str(e)}"

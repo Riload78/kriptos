@@ -14,8 +14,21 @@ def index():
 
 @app.route('/api/v1/movimientos', methods=['GET'])
 def get_all():
-    movements = dao.get_all()
-    return movements 
+    try:
+        # comment: 
+        movements = dao.get_all()
+        response = {
+            "status": "success",
+            "data" : movements
+        }
+        return response
+    except sqlite3.Error as e:
+        response = {
+            "status":"fail",
+            "mensaje": str(e)
+        }
+        return response, 400
+    # end try
 
 @app.route('/api/v1/tasa/<from_moneda>/<to_moneda>', methods=['GET'])
 def get_rates(from_moneda,to_moneda):
@@ -68,5 +81,17 @@ def get_status():
 
 @app.route('/api/v1/wallets')
 def get_wallets():
-    wallets = dao.get_wallets()
-    return wallets
+    try:
+        wallets = dao.get_wallets()
+        response = {
+            "status":"success",
+            "data": wallets
+        }
+        return response
+
+    except sqlite3.Error as e:
+        response = {
+            "status":"fail",
+            "mensaje": str(e)
+        }
+        return response
