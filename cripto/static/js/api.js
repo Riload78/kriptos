@@ -105,7 +105,9 @@ const getRate = () => {
                 const change = qtyInput / range
                 result.innerHTML = `Q: ${change}`
                 resultInput.value= change
-            })
+                btnSaveMovement.disabled = false
+                })
+            .catch(processError)
         }
 }
 
@@ -152,25 +154,32 @@ const saveMovement = () => {
         .then(response => response.json())
         .then(processInsert)
         .catch(processError)
-
-
 }
 
 const processInsert = (data) => {
     console.log(data);
-    if (data.is_ok) {
-        let tableBody = document.querySelector('#movements-table tbody')
-        tableBody.innerHTML = ''
-        qty.value = ""
-        resetSelect(fromCurrency)
-        resetSelect(toCurrency)
-        result.innerHTML="Q:"
-        pu.innerHTML="PU"
-        getCurrenciesFrom()
-        getMovements()
-
-    } else {
-        alert(data.data)
+    if(data.status === 'success') {
+        if(data.message){
+            return data.message
+        }  else if(data.id){
+            let tableBody = document.querySelector('#movements-table tbody')
+            tableBody.innerHTML = ''
+            qty.value = ""
+            resetSelect(fromCurrency)
+            resetSelect(toCurrency)
+            result.innerHTML="Q:"
+            pu.innerHTML="PU"
+            btnSaveMovement.disabled = true
+            getCurrenciesFrom()
+            getMovements()
+        } else{
+          // REVISAR alert(`Se ha producido un error: ${data.data}`) // revisAR
+          processError(data.data)
+          btnSaveMovement.disabled = true
+        }
+    } else{
+        processError(data.message)
+        btnSaveMovement.disabled = true
     }
 }
 

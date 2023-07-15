@@ -3,6 +3,7 @@ import requests
 from cripto.config import apikey
 from cripto.helper.json import to_json
 import json
+import decimal
 
 class Rates():
     def __init__(self, currency, cripto):
@@ -46,4 +47,26 @@ class Rates():
                 return False, data["error"]
         except requests.exceptions.RequestException as e:
             return False, str(e)
+    
+    def get_changes(self, currency):
+        url =  f'https://rest.coinapi.io/v1/exchangerate/{currency}?apikey={apikey}' 
+           
+        try:
+            response = requests.get(url)
+            data = response.content
+
+            diccionario = json.loads(data)
+
+            currencies = diccionario.get('rates')
+            for currency in currencies:
+                rate_float = currency.get('rate')
+                numero_decimal_str = '{:.30f}'.format(rate_float)
+                rate = float(numero_decimal_str)
+                
+                
+            print(currencies)
+            return currencies
+            
+        except Exception as e:
+            raise e
         
