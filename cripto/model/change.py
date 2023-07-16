@@ -56,16 +56,24 @@ class Rates():
             data = response.content
 
             diccionario = json.loads(data)
-
+            new_currencies = []
             currencies = diccionario.get('rates')
+            ## REEVISAR ESTO. TEMA DE EXPONENCIALES 
+            # No se si hay que hacerlo aqui o lugo cuando se recojan lod datos
+            
             for currency in currencies:
                 rate_float = currency.get('rate')
-                numero_decimal_str = '{:.30f}'.format(rate_float)
+                numero_decimal_str = '{:.25f}'.format(rate_float)
                 rate = float(numero_decimal_str)
+                currency = currency.get('asset_id_quote')
+                new_currencies.append({
+                   'asset_id_quote': currency,
+                   'rate': rate
+                })
                 
                 
-            print(currencies)
-            return currencies
+
+            return new_currencies
             
         except Exception as e:
             raise e

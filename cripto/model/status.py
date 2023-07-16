@@ -30,26 +30,41 @@ class Status():
             if key not in kriptos_to:
                 result[key] = -value
                 
-        print(result)
+        wallets = result
+        values = self.value()
+        new_wallet = []
+        
+        for wallet, balance in wallets.items():
+            for rate in values:
+                if rate.get('asset_id_quote') ==  wallet:
+                    rate_float = rate['rate']
+                    numero_decimal_str = '{:.25f}'.format(rate_float)
+                    value= 1/float(numero_decimal_str)
+
+                    new_wallet.append({
+                        wallet:{
+                            "balance": balance,
+                            "value": value
+                        }
+                    })
+                    
+                
+        return new_wallet
         # Por cada moneda tengo que ver 
     
     def price(self):
+        
        price_to = self.price_to()
        price_from = self.price_from()
-       
        precio_compra = price_to.get('EUR') - price_from.get('EUR') 
-       print(price_to)
-       print(price_from)
-       print(precio_compra)
-       
        
        return precio_compra
         
     
-    def valor_actual(self):
+    def value(self):
         # tengo el diicionarario de cambios
-        rates_collection = rates.get_changes()
-        print(rates_collection) 
+        rates_collection = rates.get_changes('EUR')
+        return rates_collection 
     
     def get_kriptos_from(self, tabla, cantidad):
         try:

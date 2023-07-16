@@ -78,13 +78,13 @@ def get_status():
     try:
         wallets = status.wallet ()
         prices = status.price()
-        actual_values = status.valor_actual('EUR','BTC')
+       
         response = {
             "status" :'success',
             "data": {
                 "wallet": wallets,
                 "price": prices,
-                "actual-value": actual_values
+                "actual-value": '?'
             }
         }
         return response
