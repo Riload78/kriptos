@@ -76,22 +76,39 @@ def insert():
 @app.route('/api/v1/status', methods=['GET'])
 def get_status():
     try:
-        wallets = status.wallet ()
+        wallets, actual_value = status.wallet ()
         prices = status.price()
-       
-        response = {
-            "status" :'success',
-            "data": {
-                "wallet": wallets,
-                "price": prices,
-                "actual-value": '?'
+
+        if len(wallets) > 0 : 
+            response = {
+                "status" :'success',
+                "data": {
+                    "wallet": wallets,
+                    "price": prices,
+                    "actual_value": actual_value
+                }
             }
+        else :
+            response = {
+                "status": 'fail',
+                "data": 'No hay registros aún'
+            
         }
         return response
     
-    except Exception as e:
-        raise e
-    # end try
+    except ValueError as e:
+        response = {
+            "status": 'fail',
+            "data": str(e)
+        }
+        return response
+    except sqlite3.Error as e:
+        response = {
+            "status": 'fail',
+            "data": "Error en base de datos."
+        }
+    return response
+
 
 @app.route('/api/v1/wallets')
 def get_wallets():

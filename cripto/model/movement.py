@@ -3,8 +3,12 @@ from datetime import datetime
 import sqlite3
 import os
 from cripto.helper.json import to_json
+from cripto.model.status import Status
+from cripto.config import path_database
 
 CURRENCIES = ("EUR", "BTC", "ETH", "USDT", "BNB", "XRP", "ADA", "SOL", "DOT", "MATIC")
+
+status = Status(path_database)
 
 class Movement:
     def __init__(self, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to, id = None):
@@ -185,6 +189,7 @@ class MovementDAO:
                             'id':'Nuevo id creado',
                             'monedas':['EUR','....']
                         }
+                        
                         return response
                     
                 except Exception as e:

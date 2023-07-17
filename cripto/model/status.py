@@ -1,5 +1,5 @@
 import sqlite3
-from cripto.helper.json import to_json
+from cripto.helper.json import to_json, validate_dic
 from cripto.model.change import Rates
 
 rates = Rates('EUR','BTC')
@@ -12,6 +12,7 @@ class Status():
         #Recoge al saldo de todas las criptomonedas registradas
         #traerme el listado de monedas de las BBDD
             #get_kriptos
+        
         kriptos_from = self.get_kriptos_from('moneda_from','cantidad_from')
         kriptos_to = self.get_kriptos_to('moneda_to','cantidad_to')
         print('Kriptos_from:',kriptos_from)
@@ -20,6 +21,7 @@ class Status():
         ## unir dos diccionarios que puedan tener mismas claves. 
         ## En caso de que tengan mismas claves el valor sera la resta de uno y otro
         result = {}
+        
         for key, value in kriptos_to.items():
             if key in kriptos_from:
                 result[key] = value - kriptos_from[key]
@@ -31,36 +33,45 @@ class Status():
                 result[key] = -value
                 
         wallets = result
-        values = self.value()
+        if wallets:
+            values = self.value()
         new_wallet = []
+        actual_value = []
         
         for wallet, balance in wallets.items():
             for rate in values:
                 if rate.get('asset_id_quote') ==  wallet:
                     rate_float = rate['rate']
                     numero_decimal_str = '{:.25f}'.format(rate_float)
-                    value= 1/float(numero_decimal_str)
+                    val= 1/float(numero_decimal_str)
+                    
+                    
 
                     new_wallet.append({
                         wallet:{
                             "balance": balance,
-                            "value": value
+                            "value": val
                         }
                     })
                     
-                
-        return new_wallet
-        # Por cada moneda tengo que ver 
+                    actual_value.append(balance)
+                    
+                    
+       
+        
+        return new_wallet, sum(actual_value)
+
     
     def price(self):
         
-       price_to = self.price_to()
-       price_from = self.price_from()
-       precio_compra = price_to.get('EUR') - price_from.get('EUR') 
+        price_to = self.price_to()
+        price_from = self.price_from()
+
+        precio_compra = price_to.get('EUR') - price_from.get('EUR') 
        
-       return precio_compra
-        
-    
+        return precio_compra
+   
+   
     def value(self):
         # tengo el diicionarario de cambios
         rates_collection = rates.get_changes('EUR')
@@ -119,7 +130,8 @@ class Status():
             conn.close()
             data = dict(res)
             print(data)
-            return data   
+            result = validate_dic(data)
+            return result   
         
         except Exception as e:
             raise e 
@@ -140,7 +152,8 @@ class Status():
             conn.close()
             data = dict(res)
             print(data)
-            return data   
+            result = validate_dic(data)
+            return result  
         
         
                  
