@@ -2,6 +2,7 @@ import sqlite3
 from cripto.helper.json import to_json, validate_dic
 from cripto.model.change import Rates
 
+# Creo que sobra
 rates = Rates('EUR','BTC')
 
 class Status():
@@ -13,8 +14,8 @@ class Status():
         #traerme el listado de monedas de las BBDD
             #get_kriptos
         
-        kriptos_from = self.get_kriptos_from('moneda_from','cantidad_from')
-        kriptos_to = self.get_kriptos_to('moneda_to','cantidad_to')
+        kriptos_from = self.get_kriptos_from()
+        kriptos_to = self.get_kriptos_to()
         print('Kriptos_from:',kriptos_from)
         print('Kriptos_to:',kriptos_to)
         #para cada una de las monedas que h
@@ -34,13 +35,16 @@ class Status():
                 
         wallets = result
         if wallets:
-            values = self.value()
+            rates_collection = rates.get_changes('EUR')
         new_wallet = []
         actual_value = []
+        native_rate = ""
         
         for wallet, balance in wallets.items():
-            for rate in values:
-                if rate.get('asset_id_quote') ==  wallet:
+            for rate in rates_collection:
+                #revisar esto del string
+                native_rate = rate.get('asset_id_quote')
+                if str(native_rate) == wallet:
                     rate_float = rate['rate']
                     numero_decimal_str = '{:.25f}'.format(rate_float)
                     val= 1/float(numero_decimal_str)
@@ -71,13 +75,8 @@ class Status():
        
         return precio_compra
    
-   
-    def value(self):
-        # tengo el diicionarario de cambios
-        rates_collection = rates.get_changes('EUR')
-        return rates_collection 
     
-    def get_kriptos_from(self, tabla, cantidad):
+    def get_kriptos_from(self):
         try:
             query = """ 
                 SELECT DISTINCT moneda_from, SUM(cantidad_from) AS sumatorio
@@ -96,7 +95,7 @@ class Status():
         except Exception as e:
             raise e
         
-    def get_kriptos_to(self, tabla, cantidad):
+    def get_kriptos_to(self):
         try:
             query = """ 
                 SELECT DISTINCT moneda_to, SUM(cantidad_to) AS sumatorio

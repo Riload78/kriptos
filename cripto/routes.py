@@ -76,7 +76,7 @@ def insert():
 @app.route('/api/v1/status', methods=['GET'])
 def get_status():
     try:
-        wallets, actual_value = status.wallet ()
+        wallets, actual_value = status.wallet()
         prices = status.price()
 
         if len(wallets) > 0 : 

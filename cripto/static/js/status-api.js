@@ -22,7 +22,7 @@ const walletList = (list) => {
 
     list.forEach((obj, index) => {
         console.log('Indice: ' + index + ' Valor: ' + obj);
-        var arr = Object.entries(obj)
+        let arr = Object.entries(obj)
         console.log('Arr:', arr);
 
         let item = ` <li class="list-group-item d-flex justify-content-between lh-sm">

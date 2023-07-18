@@ -172,7 +172,7 @@ const processInsert = (data) => {
             btnSaveMovement.disabled = true
             getCurrenciesFrom()
             getMovements()
-            getWallets()
+            
         } else{
           // REVISAR alert(`Se ha producido un error: ${data.data}`) // revisAR
           processError(data.data)
