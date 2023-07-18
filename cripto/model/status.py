@@ -36,6 +36,8 @@ class Status():
         wallets = result
         if wallets:
             rates_collection = rates.get_changes('EUR')
+    
+            
         new_wallet = []
         actual_value = []
         native_rate = ""
@@ -49,8 +51,6 @@ class Status():
                     numero_decimal_str = '{:.25f}'.format(rate_float)
                     val= 1/float(numero_decimal_str)
                     
-                    
-
                     new_wallet.append({
                         wallet:{
                             "balance": balance,
@@ -59,10 +59,7 @@ class Status():
                     })
                     
                     actual_value.append(balance)
-                    
-                    
-       
-        
+
         return new_wallet, sum(actual_value)
 
     

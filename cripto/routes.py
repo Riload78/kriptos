@@ -34,10 +34,21 @@ def get_all():
 
 @app.route('/api/v1/tasa/<from_moneda>/<to_moneda>', methods=['GET'])
 def get_rates(from_moneda,to_moneda):
-    rates = Rates(from_moneda,to_moneda)
-    rate = rates.get_rate()
+    try:
+
+        rates = Rates(from_moneda,to_moneda)
+        rate = rates.get_rate()
+        
+        return rate
+    except ValueError as e:
+        response = {
+            "status": 'fail',
+            "data": str(e)
+        }
+        return response
+    # end try
     
-    return rate
+    
 
 @app.route('/api/v1/movimiento', methods=['POST'])
 def insert():

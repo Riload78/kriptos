@@ -19,6 +19,7 @@ const kriptoValue = document.querySelector('#kripto-value')
 const value = document.querySelector('#value')
 const price = document.querySelector('#price')
 const resultBalance = document.querySelector('#result')
+const emptyInversion = document.querySelector('#empty-inversion')
 
 
 
@@ -26,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     getMovements()
     getCurrenciesTo()
     getCurrenciesFrom()
-    
+    getWallets()
     calculateRate.addEventListener('click', getRate)
     btnSaveMovement.addEventListener('click', saveMovement)
     updateBtn.addEventListener('click',getWallets)

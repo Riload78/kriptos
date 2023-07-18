@@ -21,7 +21,9 @@ class Rates():
                 data = to_json(res)
                 return data
             else:
-                return 'fail', data["error"]
+                res = ('status','fail'),('mensaje', data["error"])
+                data = to_json(res)
+                return data
         except requests.exceptions.RequestException as e:
             return ('status','fail'), ('mensaje',str(e))
         
@@ -68,13 +70,13 @@ class Rates():
                     rate = float(numero_decimal_str)
                     currency = currency.get('asset_id_quote')
                     new_currencies.append({
-                    'asset_id_quote': currency,
-                    'rate': rate
+                        'asset_id_quote': currency,
+                        'rate': rate
                     })
                 return new_currencies
             else: 
             
-                return False, data[response.text]
+                return 'error',response.text
         
         except requests.exceptions.RequestException as e:
             return False, str(e)

@@ -8,9 +8,15 @@ const getWallets = () => {
         .then((res) => {
             console.log('res',res)
             if(res.status == 'success'){
+                emptyInversion.innerHTML
                 console.log(res.data);
                 walletList(res.data.wallet)
                 getTotals(res.data)
+
+            } else{
+
+                error = `<div class="alert alert-primary text-center" role="alert">${res.data}</div>`
+                emptyInversion.innerHTML = error
             }
         })
         .catch(processError)
@@ -18,12 +24,10 @@ const getWallets = () => {
 
 
 const walletList = (list) => {
-    console.log('list:', list);
 
     list.forEach((obj, index) => {
         console.log('Indice: ' + index + ' Valor: ' + obj);
         let arr = Object.entries(obj)
-        console.log('Arr:', arr);
 
         let item = ` <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
@@ -40,14 +44,13 @@ const walletList = (list) => {
 
 
 const getTotals = (list) =>{
-    let actualValue = list.actual_value.toFixed(2)
+    let actualValue = list.actual_value
     let priceTotal = list.price.toFixed(2)
     let result = actualValue - Math. abs(priceTotal)
     let formatResult =  result.toFixed(2)
 
     
     priceTotal < 0 ?  price.classList.add('text-danger') : price.classList.remove('text-danger') 
-    
     value.innerHTML = `${actualValue}`
     price.innerHTML = `${priceTotal} EUR`
     resultBalance.innerHTML = `${formatResult} EUR`

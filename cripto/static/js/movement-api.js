@@ -99,25 +99,29 @@ const getRate = () => {
         fetch(url)
             .then(response => response.json())
             .then(function(data){
-                let range = data.rate
-                pu.innerHTML = `PU: ${range}`
-                puInput.value = range
-                const change = qtyInput / range
-                result.innerHTML = `Q: ${change}`
-                resultInput.value= change
-                btnSaveMovement.disabled = false
-                })
+                if (data.status == "succes"){
+                    let range = data.rate
+                    pu.innerHTML = `PU: ${range}`
+                    puInput.value = range
+                    const change = qtyInput / range
+                    result.innerHTML = `Q: ${change}`
+                    resultInput.value= change
+                    btnSaveMovement.disabled = false
+                } else {
+                    alert(data.mensaje)
+                }
+            })
             .catch(processError)
-        }
+    }
 }
 
 
 const validation = (field1,filed2,qty) => {
     if(field1 === '' || filed2 ==='' || field1 === filed2 ){
-        alert('La compra/venta se tiene que hacer con monedas diferentes')
+        processError('La compra/venta se tiene que hacer con monedas diferentes')
     } else if(qty <= 0){
         
-        alert('La cantidad tiene que ser mayor a 0.')
+        processError('La cantidad tiene que ser mayor a 0.')
         
     } else{
         return true
@@ -172,7 +176,7 @@ const processInsert = (data) => {
             btnSaveMovement.disabled = true
             getCurrenciesFrom()
             getMovements()
-            
+            getWallets()
         } else{
           // REVISAR alert(`Se ha producido un error: ${data.data}`) // revisAR
           processError(data.data)

@@ -133,7 +133,7 @@ class MovementDAO:
         # Validar if Moneda_from != EUR : Comprobar saldo 
                 try:
                     saldo = self.get_saldo(movement)
-                    if movement.moneda_from != "EUR" and saldo >= 0 :
+                    if movement.moneda_from != "EUR" and saldo > 0 :
                     
                    
                         # comment: 
@@ -156,7 +156,7 @@ class MovementDAO:
                             'id':'Id creado ???',
                             'monedas': ["EUR", "...Esto hay que terminar"]
                         })
-                    elif movement.moneda_from != "EUR" and saldo < 0 :
+                    elif movement.moneda_from != "EUR" and saldo <= 0 :
                         response = {
                             'status':'faild',
                             'message':'Saldo insuficiente'
