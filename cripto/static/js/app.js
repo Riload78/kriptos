@@ -9,6 +9,7 @@ const puInput = document.querySelector('#pu-hidden')
 const resultInput = document.querySelector('#qty-hidden')
 const tableBody = document.querySelector('#movements-table tbody')
 const tableEmpty =  document.querySelector('#empty')
+const messageContent = document.querySelector('#message')
 
 /* Balance */
 const updateBtn = document.querySelector('#update-state')

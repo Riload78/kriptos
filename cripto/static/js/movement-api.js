@@ -87,7 +87,7 @@ const noResultsFound = () => {
 }
 
 const getRate = () => {
-
+    messageContent.innerHTML = ''
     const value_from = fromCurrency.value;
     const value_to = toCurrency.value;
     const qtyInput = qty.value
@@ -108,7 +108,7 @@ const getRate = () => {
                     resultInput.value= change
                     btnSaveMovement.disabled = false
                 } else {
-                    alert(data.mensaje)
+                    processError(data.mensaje)
                 }
             })
             .catch(processError)
@@ -130,7 +130,8 @@ const validation = (field1,filed2,qty) => {
 
 
 const saveMovement = () => {
-    console.log('paso por aqui');
+
+    messageContent.innerHTML = ''
 
     const moneda_from = fromCurrency.value
     const moneda_to   = toCurrency.value
@@ -189,7 +190,8 @@ const processInsert = (data) => {
 }
 
 const processError = (error) =>{
-    alert('Se ha producido el siguiente error: ' + error)
+    const message = `<div class="alert alert-danger" role="alert">${error}</div>`
+    messageContent.innerHTML = message
 }
 
 const resetSelect = (select) =>{
