@@ -75,8 +75,11 @@ class Rates():
                     })
                 return new_currencies
             else: 
-            
-                return 'error',response.text
+                error = {
+                    'status':'faild',
+                    'mensaje': response.reason
+                }
+                return error
         
         except requests.exceptions.RequestException as e:
             return False, str(e)

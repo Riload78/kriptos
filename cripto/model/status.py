@@ -36,31 +36,40 @@ class Status():
         wallets = result
         if wallets:
             rates_collection = rates.get_changes('EUR')
-    
-            
-        new_wallet = []
-        actual_value = []
-        native_rate = ""
-        
-        for wallet, balance in wallets.items():
-            for rate in rates_collection:
-                #revisar esto del string
-                native_rate = rate.get('asset_id_quote')
-                if str(native_rate) == wallet:
-                    rate_float = rate['rate']
-                    numero_decimal_str = '{:.25f}'.format(rate_float)
-                    val= 1/float(numero_decimal_str)
-                    
-                    new_wallet.append({
-                        wallet:{
-                            "balance": balance,
-                            "value": val
-                        }
-                    })
-                    
-                    actual_value.append(balance)
-
-        return new_wallet, sum(actual_value)
+            if 'status' in rates_collection:
+                #devuelve el error al controlador
+                error = rates_collection 
+                new_wallet = None
+                sum_actual_value  = None
+                
+            else:
+                error = None
+                new_wallet = []
+                actual_value = []
+                native_rate = ""
+                
+                for wallet, balance in wallets.items():
+                    for rate in rates_collection:
+                        #revisar esto del string
+                        native_rate = rate.get('asset_id_quote')
+                        if str(native_rate) == wallet:
+                            rate_float = rate['rate']
+                            numero_decimal_str = '{:.25f}'.format(rate_float)
+                            val= 1/float(numero_decimal_str)
+                            
+                            new_wallet.append({
+                                wallet:{
+                                    "balance": balance,
+                                    "value": val
+                                }
+                            })
+                            
+                            actual_value.append(balance)
+                
+                sum_actual_value = sum(actual_value) 
+            return error,new_wallet, sum_actual_value 
+        else:
+            print('pues no se que pasa')
 
     
     def price(self):

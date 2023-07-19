@@ -8,15 +8,21 @@ const getWallets = () => {
         .then((res) => {
             console.log('res',res)
             if(res.status == 'success'){
-                emptyInversion.innerHTML
+                emptyInversion.innerHTML= ""
                 console.log(res.data);
                 walletList(res.data.wallet)
                 getTotals(res.data)
 
             } else{
+                if (res.data){
 
-                error = `<div class="alert alert-primary text-center" role="alert">${res.data}</div>`
-                emptyInversion.innerHTML = error
+                    error = `<div class="alert alert-primary text-center" role="alert">${res.data}</div>`
+                    emptyInversion.innerHTML = error
+                } else {
+                    error = `<div class="alert alert-danger text-center" role="alert">${res.mensaje}</div>`
+                    emptyInversion.innerHTML = error
+                }
+
             }
         })
         .catch(processError)
