@@ -135,8 +135,6 @@ class MovementDAO:
                     saldo = self.get_saldo(movement)
                     if movement.moneda_from != "EUR" and saldo > 0 :
                     
-                   
-                        # comment: 
                         query = """
                         INSERT INTO criptos
                             (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to)
@@ -208,13 +206,15 @@ class MovementDAO:
         
     def get_saldo(self, movement):
 
-        saldo = self.get_cantidades_to(movement.moneda_to) - self.get_cantidades_from(movement.moneda_from)
+        # saldo = self.get_cantidades_to(movement.moneda_to) - self.get_cantidades_from(movement.moneda_from)
+        cantidades_to = self.get_cantidades_to(movement.moneda_to)
+        cantidades_from = self.get_cantidades_from(movement.moneda_from)
+        result = cantidades_to - cantidades_from
+        print('saldo:',result)
         
-        print('saldo:',saldo)
-        
-        return saldo
+        return result
     # Mirar si puedo mejorar la lllamda para que se haga en una sola funcion
-    def get_cantidades_to(self, moneda):
+    def get_cantidades_to(self, moneda_to):
         
         query = """
             SELECT IFNULL(SUM(cantidad_to), 0) AS sumatorio
@@ -223,33 +223,72 @@ class MovementDAO:
             """
         conn = sqlite3.connect(self.path)
         cur = conn.cursor()
-        cur.execute(query,(moneda,))
+        cur.execute(query,(moneda_to,))
         res = cur.fetchone()
         conn.close()
         if res :
-            print(res[0])
-            return res[0]
+            print(res)
+            if res[0] == None:
+                print(res[0])
+          
+                return 0
+            else:
+                return res[0]
         else:
-            # Revisar return
-            return 'get_cantidades_to respuesta de error. Revisar'
+            response = {
+                        'status':'fail',
+                        'message':'No se ha podido traer los datos'
+                    } 
+            return response
         
     
-    def get_cantidades_from(self, moneda):
+    def get_cantidades_from(self, moneda_from):
         query = """
-            SELECT IFNULL(SUM(cantidad_from), 0) AS sumatorio
+            SELECT IFNULL(SUM(cantidad_from),0) AS sumatorio_from
             FROM criptos
             WHERE moneda_from = ?
             """
         conn = sqlite3.connect(self.path)
         cur = conn.cursor()
-        cur.execute(query,(moneda,))
+        cur.execute(query,(moneda_from,))
         res = cur.fetchone()
         conn.close()
         if res :
-            print(res[0])
-            return res[0]
+            print(res)
+            if res[0] == 0:
+                print(res[0])
+                query = """
+                    SELECT IFNULL(SUM(cantidad_to),0) AS sumatorio_to
+                    FROM criptos
+                    WHERE moneda_to = ?
+                    """
+                conn = sqlite3.connect(self.path)
+                cur = conn.cursor()
+                cur.execute(query,(moneda_from,))
+                res = cur.fetchone()
+                conn.close()
+                if res:
+                    print(res)
+                    if res[0] == 0:
+                        print(res[0])
+                        return 0
+                    else:
+                        return -res[0]
+                else:  
+                    
+                    response = {
+                        'status':'fail',
+                        'message':'No se ha podido traer los datos'
+                    } 
+                    return response
+            else:
+                return res[0]
         else:
-            return 'get_cantidades_from respuesta de error. Revisar'
+            response = {
+                        'status':'fail',
+                        'message':'Nose ha podido traer los datos'
+                    } 
+            return response
     
 
         

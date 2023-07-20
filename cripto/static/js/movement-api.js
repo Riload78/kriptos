@@ -168,6 +168,7 @@ const processInsert = (data) => {
             return data.message
         }  else if(data.id){
             let tableBody = document.querySelector('#movements-table tbody')
+            successContent.innerHTML = ''
             tableBody.innerHTML = ''
             qty.value = ""
             resetSelect(fromCurrency)
@@ -177,6 +178,7 @@ const processInsert = (data) => {
             btnSaveMovement.disabled = true
             getCurrenciesFrom()
             getMovements()
+            processSuccess('Compra añadida correctamente')
             getWallets()
         } else{
           // REVISAR alert(`Se ha producido un error: ${data.data}`) // revisAR
@@ -194,10 +196,23 @@ const processError = (error) =>{
     messageContent.innerHTML = message
 }
 
+const processSuccess = (message) => {
+    const successMsg = `<div class="alert alert-success" role="alert">${message}</div>`
+    successContent.innerHTML = successMsg
+    hideMessage(successContent)
+
+}
+
 const resetSelect = (select) =>{
     for (var i = 0, l = select.length; i < l; i++) {
         select[i].selected = select[i].defaultSelected;
     }
+}
+
+const hideMessage = (block) => {
+    setTimeout(function(){
+        block.style.display='none'
+    }, 2000)
 }
 
 

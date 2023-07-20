@@ -1,0 +1,8 @@
+footer{
+    width: 100%;
+}
+.btn:focus{
+    box-shadow: none;
+}
+
+

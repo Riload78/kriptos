@@ -69,7 +69,11 @@ class Status():
                 sum_actual_value = sum(actual_value) 
             return error,new_wallet, sum_actual_value 
         else:
-            print('pues no se que pasa')
+            error = 'No hay registros'
+            new_wallet = None
+            actual_value = None
+            return error,new_wallet, sum_actual_value 
+ 
 
     
     def price(self):
