@@ -30,36 +30,42 @@ const getWallets = () => {
 
 
 const walletList = (list) => {
+    if (list){
+        
+        list.forEach((obj, index) => {
+            console.log('Indice: ' + index + ' Valor: ' + obj);
+            let arr = Object.entries(obj)
+    
+            let item = ` <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">${arr[0][0]}</h6>
+                                <small class="text-body-secondary">Unidades: ${arr[0][1]['balance']}</small>
+                            </div>
+                            <span class="text-body-secondary">Rate: ${arr[0][1]['value'].toFixed(2)}</span>
+                        </li>`
+    
+            balanceList.innerHTML += item
+    
+        })
+    }
 
-    list.forEach((obj, index) => {
-        console.log('Indice: ' + index + ' Valor: ' + obj);
-        let arr = Object.entries(obj)
-
-        let item = ` <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <h6 class="my-0">${arr[0][0]}</h6>
-                            <small class="text-body-secondary">Unidades: ${arr[0][1]['balance']}</small>
-                        </div>
-                        <span class="text-body-secondary">Rate: ${arr[0][1]['value'].toFixed(2)}</span>
-                    </li>`
-
-        balanceList.innerHTML += item
-
-    })
 }
 
 
 const getTotals = (list) =>{
-    let actualValue = list.actual_value
-    let priceTotal = list.price.toFixed(2)
-    let result = actualValue - Math. abs(priceTotal)
-    let formatResult =  result.toFixed(2)
+    console.log('list:', list);
+    if (typeof list != 'string') {
 
+        let actualValue = list.actual_value
+        let priceTotal = list.price.toFixed(2)
+        let result = actualValue - Math. abs(priceTotal)
+        let formatResult =  result.toFixed(2)
     
-    priceTotal < 0 ?  price.classList.add('text-danger') : price.classList.remove('text-danger') 
-    value.innerHTML = `${actualValue}`
-    price.innerHTML = `${priceTotal} EUR`
-    resultBalance.innerHTML = `${formatResult} EUR`
+        priceTotal < 0 ?  price.classList.add('text-danger') : price.classList.remove('text-danger') 
+        value.innerHTML = `${actualValue}`
+        price.innerHTML = `${priceTotal} EUR`
+        resultBalance.innerHTML = `${formatResult} EUR`
+    }
 
 
 }

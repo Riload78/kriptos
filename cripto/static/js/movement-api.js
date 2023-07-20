@@ -17,7 +17,6 @@ const getCurrenciesFrom = () => {
             console.log(res)
             if(res.data.length >= 1){
                 fromCurrency.options.length=1 // remove all options firstly
-                console.log('por aqui');
                 const wallets = res.data
                 for (const currency of wallets){
                     
@@ -54,8 +53,6 @@ const getMovements = () => {
                     return showMovements(movementsData.data)
                 }
                
-            }else{  // creo que esto hay que meterlo en el catch
-                alert(`Error ${movementsData.mensaje}`)
             }
         })
         .catch(processError)
@@ -64,21 +61,23 @@ const getMovements = () => {
 
 const showMovements = (movements) => {
 
+    if (movements){
+
+        movements.forEach((movement) => {
     
-    movements.forEach((movement) => {
-
-        let item = `<tr>  
-                        <td>${movement.id}</td>
-                        <td>${movement.date}</td>
-                        <td>${movement.time}</td>
-                        <td>${movement.moneda_from}</td>
-                        <td>${movement.cantidad_from}</td>
-                        <td>${movement.moneda_to}</td>
-                        <td>${movement.cantidad_to}</td>
-                    </tr>`
-
-        tableBody.innerHTML += item
-    })
+            let item = `<tr>  
+                            <td>${movement.id}</td>
+                            <td>${movement.date}</td>
+                            <td>${movement.time}</td>
+                            <td>${movement.moneda_from}</td>
+                            <td>${movement.cantidad_from}</td>
+                            <td>${movement.moneda_to}</td>
+                            <td>${movement.cantidad_to}</td>
+                        </tr>`
+    
+            tableBody.innerHTML += item
+        })
+    }
 }
 
 const noResultsFound = () => {
