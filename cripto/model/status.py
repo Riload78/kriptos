@@ -71,7 +71,7 @@ class Status():
         else:
             error = 'No hay registros'
             new_wallet = None
-            actual_value = None
+            sum_actual_value = None
             return error,new_wallet, sum_actual_value 
  
 

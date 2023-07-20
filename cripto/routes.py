@@ -111,7 +111,11 @@ def get_status():
             return response
         
         else:
-            return error
+            response = {
+                "status": 'success',
+                "data": error
+            }
+            return response
             
     
     except ValueError as e:

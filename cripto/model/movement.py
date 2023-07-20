@@ -111,8 +111,11 @@ class MovementDAO:
         self.path = db_path
         # Falta por comprobar -> Borrar BBDD y probar si la crea
         if not os.path.isfile(db_path):
-            query = """
-                CREATE TABLE "criptos" (
+            print('aqui')
+            try:
+       
+                query = """
+                    CREATE TABLE IF NOT EXISTS "criptos" (
                         "id" INTEGER,
                         "date" TEXT NOT NULL,
                         "time" TEXT NOT NULL,
@@ -122,12 +125,17 @@ class MovementDAO:
                         "cantidad_to" REAL NOT NULL,
                         PRIMARY KEY("id" AUTOINCREMENT)
                     );
-            """
-        
-            conn = sqlite3.connect(self.path)
-            cur = conn.cursor()
-            cur.execute(query)
-            conn.close()
+                """
+            
+                conn = sqlite3.connect(self.path)
+                cur = conn.cursor()
+                cur.execute(query)
+                conn.commit()
+                conn.close()
+                print("Tabla criptos creada correctamente.")
+            except sqlite3.Error as e:
+                print(f"Error al crear la tabla criptos: {e}")
+
 
     def insert(self, movement):
         # Validar if Moneda_from != EUR : Comprobar saldo 
@@ -175,13 +183,7 @@ class MovementDAO:
                                             movement.moneda_to, movement.cantidad_to))
                         conn.commit()
                         conn.close()
-                        
-                        #self.set_response('status','success'), ('id','Id creado ???'), ('monedas', ["EUR", "...Esto hay que terminar"])
-                        """ return self.set_response({
-                            'status':'success',
-                            'id':'Id creado ???',
-                            'monedas': ["EUR", "...Esto hay que terminar"]
-                        }) """
+
                         response = {
                             'status':'success',
                             'id':'Nuevo id creado',
@@ -206,11 +208,11 @@ class MovementDAO:
         
     def get_saldo(self, movement):
 
-        # saldo = self.get_cantidades_to(movement.moneda_to) - self.get_cantidades_from(movement.moneda_from)
+        
         cantidades_to = self.get_cantidades_to(movement.moneda_to)
         cantidades_from = self.get_cantidades_from(movement.moneda_from)
         result = cantidades_to - cantidades_from
-        print('saldo:',result)
+       
         
         return result
     # Mirar si puedo mejorar la lllamda para que se haga en una sola funcion
