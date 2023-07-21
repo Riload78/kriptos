@@ -112,7 +112,7 @@ def get_status():
         
         else:
             response = {
-                "status": 'success',
+                "status": 'fail',
                 "data": error
             }
             return response

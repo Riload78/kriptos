@@ -14,14 +14,17 @@ const getWallets = () => {
                 getTotals(res.data)
 
             } else{
-                if (res.data){
+                /* if (res.data){
 
-                    error = `<div class="alert alert-primary text-center" role="alert">${res.data}</div>`
+                    error = `<div class="alert alert-primary text-center" role="alert">${res.data.mensaje}</div>`
                     emptyInversion.innerHTML = error
-                } else {
-                    error = `<div class="alert alert-danger text-center" role="alert">${res.mensaje}</div>`
+                } else { */
+                    value.innerHTML = ""
+                    resultBalance.innerHTML = ""
+                    error = `<div class="alert alert-danger text-center" role="alert">${res.data.mensaje}</div>`
                     emptyInversion.innerHTML = error
-                }
+                    hideMessage(emptyInversion) 
+                /* }  */
 
             }
         })
@@ -30,7 +33,8 @@ const getWallets = () => {
 
 
 const walletList = (list) => {
-    if (list){
+    console.log('list walletList:', list);
+    if (typeof list != undefined){
         
         list.forEach((obj, index) => {
             console.log('Indice: ' + index + ' Valor: ' + obj);

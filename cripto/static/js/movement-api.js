@@ -193,6 +193,7 @@ const processInsert = (data) => {
 const processError = (error) =>{
     const message = `<div class="alert alert-danger" role="alert">${error}</div>`
     messageContent.innerHTML = message
+   // hideMessage(messageContent)
 }
 
 const processSuccess = (message) => {
