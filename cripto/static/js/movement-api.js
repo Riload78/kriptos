@@ -173,6 +173,7 @@ const processInsert = (data) => {
         }  else if(data.id){
             let tableBody = document.querySelector('#movements-table tbody')
             successContent.innerHTML = ''
+            successContent.style.display = 'block'
             tableBody.innerHTML = ''
             qty.value = ""
             resetSelect(fromCurrency)
