@@ -5,4 +5,16 @@ footer{
     box-shadow: none;
 }
 
+.result-q,
+.result-precio{
+    background-color: #f1f1f1;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.result-q .form-label,
+.result-precio .form-label {
+    margin-bottom: 0;
+}
+
 

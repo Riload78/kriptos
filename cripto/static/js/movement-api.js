@@ -174,7 +174,7 @@ const processInsert = (data) => {
             resetSelect(fromCurrency)
             resetSelect(toCurrency)
             result.innerHTML="Q:"
-            pu.innerHTML="PU"
+            pu.innerHTML="PU:"
             btnSaveMovement.disabled = true
             getCurrenciesFrom()
             getMovements()
