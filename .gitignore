@@ -1,0 +1,6 @@
+env/
+.env
+.history/
+.vscode/
+**__pycache__/
+data/cripto.db
