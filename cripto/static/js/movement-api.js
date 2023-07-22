@@ -85,11 +85,13 @@ const noResultsFound = () => {
 }
 
 const getRate = () => {
+
     messageContent.innerHTML = ''
+    messageContent.style.display = 'block'
+
     const value_from = fromCurrency.value;
     const value_to = toCurrency.value;
     const qtyInput = qty.value
-
     const validate = validation(value_from,value_to,qtyInput)
 
     if(validate){
@@ -192,7 +194,7 @@ const processInsert = (data) => {
 const processError = (error) =>{
     const message = `<div class="alert alert-danger" role="alert">${error}</div>`
     messageContent.innerHTML = message
-   // hideMessage(messageContent)
+    hideMessage(messageContent)
 }
 
 const processSuccess = (message) => {
@@ -209,9 +211,9 @@ const resetSelect = (select) =>{
 }
 
 const hideMessage = (block) => {
-   /*  setTimeout(function(){
+    setTimeout(function(){
         block.style.display='none'
-    }, 2000) */
+    }, 2000)
 }
 
 const removeAction = (event) => {
