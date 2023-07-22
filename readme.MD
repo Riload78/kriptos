@@ -44,11 +44,11 @@ Ahora puedes instalar paquetes y desarrollar tu proyecto en este entorno virtual
 
 ## Configuración de la APP
 Copia el fichero `.env_template` y renombrarlo como `.env` e indicar los datos requeridos:
-    * 1. FLASK_DEBUG a True o False (en producción False)
-    * 2. Deja FLASK_APP como está
-    * 3. FLASK_SECRET_KEY: Introducir la secret key. En principio no es necesario ya que no se requiere wtForms
-    * 4. PATH_SQLITE : introducir la ruta de la BBDD. Valor por defecto: ```data/cripto.db```
-    * 5. API_IO : ir a ```https://www.coinapi.io/```y crear una cuenta para obtener la api key he introducirla en el campo API_IO
+    - 1. FLASK_DEBUG a True o False (en producción False)
+    - 2. Deja FLASK_APP como está
+    - 3. FLASK_SECRET_KEY: Introducir la secret key. En principio no es necesario ya que no se requiere wtForms
+    - 4. PATH_SQLITE : introducir la ruta de la BBDD. Valor por defecto: ```data/cripto.db```
+    - 5. API_IO : ir a ```https://www.coinapi.io/```y crear una cuenta para obtener la api key he introducirla en el campo API_IO
 
 Instala las dependencias ejecutando 
 ```
