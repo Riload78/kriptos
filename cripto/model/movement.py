@@ -358,7 +358,8 @@ class MovementDAO:
             
             if res :
                 for reg in res:
-                    wallets.append(reg[0])
+                    if reg[0] != 'EUR':
+                        wallets.append(reg[0])
                 
                 return wallets
             

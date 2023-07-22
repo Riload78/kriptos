@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     calculateRate.addEventListener('click', getRate)
     btnSaveMovement.addEventListener('click', saveMovement)
     updateBtn.addEventListener('click',getWallets)
+    qty.addEventListener('keydown',removeAction)
     
 
 });

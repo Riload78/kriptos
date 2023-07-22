@@ -19,11 +19,10 @@ const getCurrenciesFrom = () => {
                 fromCurrency.options.length=1 // remove all options firstly
                 const wallets = res.data
                 for (const currency of wallets){
-                    
+
                     option = `<option value="${currency}">${currency}</option>`
-             
                     fromCurrency.innerHTML += option
-                    
+                
                  }
                  
             } else {
@@ -210,11 +209,17 @@ const resetSelect = (select) =>{
 }
 
 const hideMessage = (block) => {
-    setTimeout(function(){
+   /*  setTimeout(function(){
         block.style.display='none'
-    }, 2000)
+    }, 2000) */
 }
 
+const removeAction = (event) => {
+    if (event.code == 'Enter'){
+        event.preventDefault()
+        getRate()
+    }
+}
 
 
 

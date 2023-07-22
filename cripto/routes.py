@@ -88,7 +88,6 @@ def insert():
 def get_status():
     try:
 
-
         error, wallets, actual_value = status.wallet()
         prices = status.price()
         if error ==  None:
@@ -105,7 +104,10 @@ def get_status():
             else :
                 response = {
                     "status": 'fail',
-                    "data": 'No hay registros aún'
+                    "data": {},
+                    "mensaje":'No has realizado ninguna inversión'
+                
+                
                 
             }
             return response
@@ -113,7 +115,8 @@ def get_status():
         else:
             response = {
                 "status": 'fail',
-                "data": error
+                "data": {},
+                "mensaje":error
             }
             return response
             

@@ -2,7 +2,7 @@ const getWallets = () => {
     balanceList.innerHTML = ''
     price.innerHTML = ''
     const url = '/api/v1/status'
-    console.log('get_wallet');
+
     fetch(url)
         .then(response => response.json())
         .then((res) => {
@@ -14,18 +14,10 @@ const getWallets = () => {
                 getTotals(res.data)
 
             } else{
-                /* if (res.data){
-
-                    error = `<div class="alert alert-primary text-center" role="alert">${res.data.mensaje}</div>`
-                    emptyInversion.innerHTML = error
-                } else { */
-                    value.innerHTML = ""
-                    resultBalance.innerHTML = ""
-                    error = `<div class="alert alert-danger text-center" role="alert">${res.data.mensaje}</div>`
-                    emptyInversion.innerHTML = error
-                    hideMessage(emptyInversion) 
-                /* }  */
-
+            
+                error = `<div class="alert alert-primary text-center" role="alert">${res.mensaje}</div>`
+                emptyInversion.innerHTML = error
+             
             }
         })
         .catch(processError)
@@ -60,14 +52,16 @@ const getTotals = (list) =>{
     console.log('list:', list);
     if (typeof list != 'string') {
 
-        let actualValue = list.actual_value
+        let actualValue = list.actual_value.toFixed(2)
         let priceTotal = list.price.toFixed(2)
         let result = actualValue - Math. abs(priceTotal)
         let formatResult =  result.toFixed(2)
     
         priceTotal < 0 ?  price.classList.add('text-danger') : price.classList.remove('text-danger') 
-        value.innerHTML = `${actualValue}`
+        value.innerHTML = `${actualValue} EUR`
+
         price.innerHTML = `${priceTotal} EUR`
+        formatResult < 0 ? resultBalance.classList.add('text-danger') : resultBalance.classList.remove('text-danger')
         resultBalance.innerHTML = `${formatResult} EUR`
     }
 

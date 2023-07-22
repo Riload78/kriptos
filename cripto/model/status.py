@@ -64,7 +64,7 @@ class Status():
                                 }
                             })
                             
-                            actual_value.append(balance)
+                            actual_value.append(balance * val)
                 
                 sum_actual_value = sum(actual_value) 
             return error,new_wallet, sum_actual_value 
@@ -72,7 +72,7 @@ class Status():
             error = 'No hay registros'
             new_wallet = None
             sum_actual_value = None
-            return error,new_wallet, sum_actual_value 
+            return error, new_wallet, sum_actual_value 
  
 
     
