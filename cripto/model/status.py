@@ -38,7 +38,7 @@ class Status():
             rates_collection = rates.get_changes('EUR')
             if 'status' in rates_collection:
                 #devuelve el error al controlador
-                error = rates_collection 
+                error = rates_collection['mensaje']
                 new_wallet = None
                 sum_actual_value  = None
                 

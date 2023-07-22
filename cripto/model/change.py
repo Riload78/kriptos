@@ -75,9 +75,13 @@ class Rates():
                     })
                 return new_currencies
             else: 
+                res = json.loads(response.text)
+                msg = res['error']
+                mensaje_json = json.loads(msg)
+                mensaje = mensaje_json['error']
                 error = {
-                    'status':'faild',
-                    'mensaje': response.reason
+                    'mensaje': mensaje,
+                    'status' : 'fail'
                 }
                 return error
         

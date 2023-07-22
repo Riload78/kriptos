@@ -1,6 +1,7 @@
 const getWallets = () => {
     balanceList.innerHTML = ''
     price.innerHTML = ''
+    emptyInversion.style.display ='block'
     const url = '/api/v1/status'
 
     fetch(url)
@@ -17,6 +18,7 @@ const getWallets = () => {
             
                 error = `<div class="alert alert-primary text-center" role="alert">${res.mensaje}</div>`
                 emptyInversion.innerHTML = error
+                hideMessage(emptyInversion)
              
             }
         })

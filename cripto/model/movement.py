@@ -141,7 +141,7 @@ class MovementDAO:
         # Validar if Moneda_from != EUR : Comprobar saldo 
                 try:
                     saldo = self.get_saldo(movement)
-                    if movement.moneda_from != "EUR" and saldo > 0 :
+                    if movement.moneda_from != "EUR" and saldo >= movement.cantidad_from :
                     
                         query = """
                         INSERT INTO criptos
@@ -162,7 +162,7 @@ class MovementDAO:
                             'id':'Id creado ???',
                             'monedas': ["EUR", "...Esto hay que terminar"]
                         })
-                    elif movement.moneda_from != "EUR" and saldo <= 0 :
+                    elif movement.moneda_from != "EUR" and saldo < movement.cantidad_from :
                         response = {
                             'status':'faild',
                             'message':'Saldo insuficiente'
@@ -209,7 +209,7 @@ class MovementDAO:
     def get_saldo(self, movement):
 
         
-        cantidades_to = self.get_cantidades_to(movement.moneda_to)
+        cantidades_to = self.get_cantidades_to(movement.moneda_from)
         cantidades_from = self.get_cantidades_from(movement.moneda_from)
         result = cantidades_to - cantidades_from
        
@@ -262,7 +262,7 @@ class MovementDAO:
                 query = """
                     SELECT IFNULL(SUM(cantidad_to),0) AS sumatorio_to
                     FROM criptos
-                    WHERE moneda_to = ?
+                    WHERE moneda_from = ?
                     """
                 conn = sqlite3.connect(self.path)
                 cur = conn.cursor()
