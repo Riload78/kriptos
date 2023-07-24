@@ -10,69 +10,66 @@ class Status():
         self.db_path = db_path
             
     def wallet(self):
-        #Recoge al saldo de todas las criptomonedas registradas
-        #traerme el listado de monedas de las BBDD
-            #get_kriptos
-        
+
         kriptos_from = self.get_kriptos_from()
         kriptos_to = self.get_kriptos_to()
-        print('Kriptos_from:',kriptos_from)
-        print('Kriptos_to:',kriptos_to)
-        #para cada una de las monedas que h
-        ## unir dos diccionarios que puedan tener mismas claves. 
-        ## En caso de que tengan mismas claves el valor sera la resta de uno y otro
-        result = {}
-        
-        for key, value in kriptos_to.items():
-            if key in kriptos_from:
-                result[key] = value - kriptos_from[key]
-            else:
-                result[key] = value
-        # Agregar las claves únicas de dict2 que no estan en dic1 y las agrega a result pero con signmo negativo
-        for key, value in kriptos_from.items():
-            if key not in kriptos_to:
-                result[key] = -value
-                
-        wallets = result
-        if wallets:
-            rates_collection = rates.get_changes('EUR')
-            if 'status' in rates_collection:
-                #devuelve el error al controlador
-                error = rates_collection['mensaje']
-                new_wallet = None
-                sum_actual_value  = None
-                
-            else:
-                error = None
-                new_wallet = []
-                actual_value = []
-                native_rate = ""
-                
-                for wallet, balance in wallets.items():
-                    for rate in rates_collection:
-                        #revisar esto del string
-                        native_rate = rate.get('asset_id_quote')
-                        if str(native_rate) == wallet:
-                            rate_float = rate['rate']
-                            numero_decimal_str = '{:.25f}'.format(rate_float)
-                            val= 1/float(numero_decimal_str)
-                            
-                            new_wallet.append({
-                                wallet:{
-                                    "balance": balance,
-                                    "value": val
-                                }
-                            })
-                            
-                            actual_value.append(balance * val)
-                
-                sum_actual_value = sum(actual_value) 
-            return error,new_wallet, sum_actual_value 
-        else:
-            error = 'No hay registros'
+        if kriptos_from['status'] == 'fail':
+            error = kriptos_from['message']
             new_wallet = None
             sum_actual_value = None
             return error, new_wallet, sum_actual_value 
+        else:
+            result = {}
+            
+            for key, value in kriptos_to.items():
+                if key in kriptos_from:
+                    result[key] = value - kriptos_from[key]
+                else:
+                    result[key] = value
+            
+            for key, value in kriptos_from.items():
+                if key not in kriptos_to:
+                    result[key] = -value
+                    
+            wallets = result
+            if wallets:
+                rates_collection = rates.get_changes('EUR')
+                if 'status' in rates_collection:
+                    error = rates_collection['message']
+                    new_wallet = None
+                    sum_actual_value  = None
+                    
+                else:
+                    error = None
+                    new_wallet = []
+                    actual_value = []
+                    native_rate = ""
+                    
+                    for wallet, balance in wallets.items():
+                        for rate in rates_collection:
+                            
+                            native_rate = rate.get('asset_id_quote')
+                            if str(native_rate) == wallet:
+                                rate_float = rate['rate']
+                                numero_decimal_str = '{:.25f}'.format(rate_float)
+                                val= 1/float(numero_decimal_str)
+                                
+                                new_wallet.append({
+                                    wallet:{
+                                        "balance": balance,
+                                        "value": val
+                                    }
+                                })
+                                
+                                actual_value.append(balance * val)
+                    
+                    sum_actual_value = sum(actual_value) 
+                return error,new_wallet, sum_actual_value 
+            else:
+                error = 'No hay registros'
+                new_wallet = None
+                sum_actual_value = None
+                return error, new_wallet, sum_actual_value 
  
 
     
@@ -103,7 +100,12 @@ class Status():
             return data            
             
         except Exception as e:
-            raise e
+                    
+            response = {
+                'status':'fail',
+                'message':str(e)
+            }
+            return response
         
     def get_kriptos_to(self):
         try:
@@ -122,7 +124,12 @@ class Status():
             return data            
             
         except Exception as e:
-            raise e
+                    
+            response = {
+                'status':'fail',
+                'message':str(e)
+            }
+            return response
     
     def price_from(self):
         try:
@@ -143,7 +150,12 @@ class Status():
             return result   
         
         except Exception as e:
-            raise e 
+                    
+            response = {
+                'status':'fail',
+                'message':str(e)
+            }
+            return response
         
         
     def price_to(self):
@@ -167,4 +179,9 @@ class Status():
         
                  
         except Exception as e:
-            raise e 
+                    
+            response = {
+                'status':'fail',
+                'message':str(e)
+            }
+            return response 

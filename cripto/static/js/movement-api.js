@@ -14,7 +14,7 @@ const getCurrenciesFrom = () => {
     fetch(url)
         .then(response => response.json())
         .then(function(res){
-            console.log(res)
+
             if(res.data.length >= 1){
                 fromCurrency.options.length=1 // remove all options firstly
                 const wallets = res.data
@@ -37,12 +37,13 @@ const getCurrenciesFrom = () => {
 
 const getMovements = () => { 
     const url = '/api/v1/movimientos'
-
+    
     fetch(url)
         .then(response => response.json())
         .then(function(res){
-            console.log(res)
+
             const movementsData = res;
+            collapseFrom.disabled = false
             if (movementsData.status == 'success'){
                 if(movementsData.data.length == 0){
                     return noResultsFound()
@@ -52,6 +53,13 @@ const getMovements = () => {
                     return showMovements(movementsData.data)
                 }
                
+            } else{
+                mensaje = movementsData.message
+                const successMsg = `<div class="alert alert-danger" role="alert">${movementsData.message}</div>`
+                generalMessageContent.innerHTML = successMsg
+                collapseFrom.disabled = true
+                //hideMessage(generalMessageContent)
+
             }
         })
         .catch(processError)
@@ -108,9 +116,7 @@ const getRate = () => {
                     resultInput.value= change
                     btnSaveMovement.disabled = false
                 } else {
-                    
-                    const msg = JSON.parse(data.mensaje)
-                    console.log('msg:', msg);
+                    const msg = JSON.parse(data.message)
                     mensaje = msg.error
                     processError(mensaje)
                 }
@@ -168,9 +174,7 @@ const saveMovement = () => {
 const processInsert = (data) => {
     console.log(data);
     if(data.status === 'success') {
-        if(data.message){
-            return data.message
-        }  else if(data.id){
+      
             let tableBody = document.querySelector('#movements-table tbody')
             successContent.innerHTML = ''
             successContent.style.display = 'block'
@@ -183,13 +187,10 @@ const processInsert = (data) => {
             btnSaveMovement.disabled = true
             getCurrenciesFrom()
             getMovements()
-            processSuccess('Compra añadida correctamente')
+            processSuccess(data.message)
             getWallets()
-        } else{
-          // REVISAR alert(`Se ha producido un error: ${data.data}`) // revisAR
-          processError(data.data)
-          btnSaveMovement.disabled = true
-        }
+       
+
     } else{
         processError(data.message)
         btnSaveMovement.disabled = true

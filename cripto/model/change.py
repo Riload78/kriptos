@@ -21,11 +21,11 @@ class Rates():
                 data = to_json(res)
                 return data
             else:
-                res = ('status','fail'),('mensaje', data["error"])
+                res = ('status','fail'),('message', data["error"])
                 data = to_json(res)
                 return data
         except requests.exceptions.RequestException as e:
-            return ('status','fail'), ('mensaje',str(e))
+            return ('status','fail'), ('message',str(e))
         
     def get_list_cripto(self):
         url = f"https://rest.coinapi.io/v1/assets?apikey={apikey}"
@@ -80,7 +80,7 @@ class Rates():
                 mensaje_json = json.loads(msg)
                 mensaje = mensaje_json['error']
                 error = {
-                    'mensaje': mensaje,
+                    'message': mensaje,
                     'status' : 'fail'
                 }
                 return error

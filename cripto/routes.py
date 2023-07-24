@@ -19,17 +19,23 @@ def get_all():
     try:
         # comment: 
         movements = dao.get_all()
+        if movements['status'] == 'fail':
+            response = {
+                "status":"fail",
+                "message": movements['message']
+            }
+        else :
+            response = {
+                "status": "success",
+                "data" : movements
+            }
+        return response
+    except ValueError as e:
         response = {
-            "status": "success",
-            "data" : movements
+            "status": 'fail',
+            "data": str(e)
         }
         return response
-    except sqlite3.Error as e:
-        response = {
-            "status":"fail",
-            "mensaje": str(e)
-        }
-        return response, 400
     # end try
 
 @app.route('/api/v1/tasa/<from_moneda>/<to_moneda>', methods=['GET'])
@@ -89,8 +95,8 @@ def get_status():
     try:
 
         error, wallets, actual_value = status.wallet()
-        prices = status.price()
         if error ==  None:
+            prices = status.price()
 
             if len(wallets) > 0 : 
                 response = {
@@ -105,10 +111,7 @@ def get_status():
                 response = {
                     "status": 'fail',
                     "data": {},
-                    "mensaje":'No has realizado ninguna inversión'
-                
-                
-                
+                    "message":'No has realizado ninguna inversión'
             }
             return response
         
@@ -116,7 +119,7 @@ def get_status():
             response = {
                 "status": 'fail',
                 "data": {},
-                "mensaje":error
+                "message":error
             }
             return response
             
@@ -125,12 +128,6 @@ def get_status():
         response = {
             "status": 'fail',
             "data": str(e)
-        }
-        return response
-    except sqlite3.Error as e:
-        response = {
-            "status": 'fail',
-            "data": "Error en base de datos."
         }
         return response
 
@@ -148,6 +145,6 @@ def get_wallets():
     except sqlite3.Error as e:
         response = {
             "status":"fail",
-            "mensaje": str(e)
+            "message": str(e)
         }
         return response

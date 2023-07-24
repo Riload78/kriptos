@@ -19,11 +19,6 @@ class Movement:
         self.cantidad_from = cantidad_from
         self.moneda_to = moneda_to
         self.cantidad_to = cantidad_to
-        
-
-        """ self.abstract = abstract
-        self.amount = amount
-        self.currency = currency """
 
     @property
     def date(self):
@@ -132,73 +127,72 @@ class MovementDAO:
                 cur.execute(query)
                 conn.commit()
                 conn.close()
-                print("Tabla criptos creada correctamente.")
+                
             except sqlite3.Error as e:
                 print(f"Error al crear la tabla criptos: {e}")
 
 
     def insert(self, movement):
-        # Validar if Moneda_from != EUR : Comprobar saldo 
-                try:
-                    saldo = self.get_saldo(movement)
-                    if movement.moneda_from != "EUR" and saldo >= movement.cantidad_from :
-                    
-                        query = """
-                        INSERT INTO criptos
-                            (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to)
-                        VALUES (?, ?, ?, ?, ?, ?)
-                        """
+        
+        try:
+            saldo = self.get_saldo(movement)
+            if movement.moneda_from != "EUR" and saldo >= movement.cantidad_from :
+            
+                query = """
+                INSERT INTO criptos
+                    (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """
 
-                        conn = sqlite3.connect(self.path)
-                        cur = conn.cursor()
-                        cur.execute(query, (movement.date, movement.time,movement.moneda_from, movement.cantidad_from,
-                                            movement.moneda_to, movement.cantidad_to))
-                        conn.commit()
-                        conn.close()
-                        
-                        #self.set_response('status','success'), ('id','Id creado ???'), ('monedas', ["EUR", "...Esto hay que terminar"])
-                        return self.set_response({
-                            'status':'success',
-                            'id':'Id creado ???',
-                            'monedas': ["EUR", "...Esto hay que terminar"]
-                        })
-                    elif movement.moneda_from != "EUR" and saldo < movement.cantidad_from :
-                        response = {
-                            'status':'faild',
-                            'message':'Saldo insuficiente'
-                            
-                        }
-                        return response
-                    elif movement.moneda_from == "EUR":
-                         # comment: 
-                        query = """
-                        INSERT INTO criptos
-                            (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to)
-                        VALUES (?, ?, ?, ?, ?, ?)
-                        """
-
-                        conn = sqlite3.connect(self.path)
-                        cur = conn.cursor()
-                        cur.execute(query, (movement.date, movement.time,movement.moneda_from, movement.cantidad_from,
-                                            movement.moneda_to, movement.cantidad_to))
-                        conn.commit()
-                        conn.close()
-
-                        response = {
-                            'status':'success',
-                            'id':'Nuevo id creado',
-                            'monedas':['EUR','....']
-                        }
-                        
-                        return response
+                conn = sqlite3.connect(self.path)
+                cur = conn.cursor()
+                cur.execute(query, (movement.date, movement.time,movement.moneda_from, movement.cantidad_from,
+                                    movement.moneda_to, movement.cantidad_to))
+                conn.commit()
+                conn.close()
+                
+                
+                return self.set_response({
+                    'status':'success',
+                    'message':'Se ha realizado la compra correctamente'
                     
-                except Exception as e:
+                })
+            elif movement.moneda_from != "EUR" and saldo < movement.cantidad_from :
+                response = {
+                    'status':'fail',
+                    'message':'Saldo insuficiente'
                     
-                    response = {
-                        'status':'fail',
-                        'message':str(e)
-                    }
-                    return response
+                }
+                return response
+            elif movement.moneda_from == "EUR":
+                
+                query = """
+                INSERT INTO criptos
+                    (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """
+
+                conn = sqlite3.connect(self.path)
+                cur = conn.cursor()
+                cur.execute(query, (movement.date, movement.time,movement.moneda_from, movement.cantidad_from,
+                                    movement.moneda_to, movement.cantidad_to))
+                conn.commit()
+                conn.close()
+
+                response = {
+                    'status':'success',
+                    'message':'Se ha realizado la compra correctamente'
+                }
+                
+                return response
+            
+        except Exception as e:
+            
+            response = {
+                'status':'fail',
+                'message':str(e)
+            }
+            return response
                    
 
     def set_response(self,response):
@@ -215,7 +209,7 @@ class MovementDAO:
        
         
         return result
-    # Mirar si puedo mejorar la lllamda para que se haga en una sola funcion
+    
     def get_cantidades_to(self, moneda_to):
         
         query = """
@@ -325,21 +319,14 @@ class MovementDAO:
             return movimientos
         
         except sqlite3.Error as e:
-            # Manejo de la excepción específica de SQLite
             error_message = f"Error de SQLite: {str(e)}"
-            return error_message
-        
-        
-    # en principio no se va usar -> eliminar en el repaso del codigo si procede    
-    def to_dict(self):
-        return{
-            "id": self.id,
-            "date": str(self.date),
-            "abstract": self.abstract,
-            "amount": float(self.amount),
-            "currency": self.currency
             
-        }
+            response = {
+                'status':'fail',
+                'message': error_message
+            }
+            return response
+        
         
     def get_wallets(self):
         try:
@@ -369,7 +356,7 @@ class MovementDAO:
                 
         except sqlite3.Error as e:
             error_message = f"Error de SQLite: {str(e)}"
-            return ('status','fail'), ('mensaje',error_message)
+            return ('status','fail'), ('message',error_message)
         
         
 

@@ -1,4 +1,5 @@
 const calculateRate = document.querySelector('#calculate-rate')
+const collapseFrom = document.querySelector('#collapse-from')
 const btnSaveMovement = document.querySelector('#save-movement')
 const fromCurrency = document.querySelector('#from')
 const toCurrency = document.querySelector('#to')
@@ -9,10 +10,10 @@ const puInput = document.querySelector('#pu-hidden')
 const resultInput = document.querySelector('#qty-hidden')
 const tableBody = document.querySelector('#movements-table tbody')
 const tableEmpty =  document.querySelector('#empty')
+const generalMessageContent = document.querySelector('#general-message')
 const messageContent = document.querySelector('#message')
 const successContent = document.querySelector('#list-message')
 
-/* Balance */
 const updateBtn = document.querySelector('#update-state')
 const balanceList = document.querySelector('#balance-list')
 const kripto = document.querySelector('#kripto')
@@ -34,7 +35,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
     btnSaveMovement.addEventListener('click', saveMovement)
     updateBtn.addEventListener('click',getWallets)
     qty.addEventListener('keydown',removeAction)
-    
-
 });
 

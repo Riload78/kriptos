@@ -7,16 +7,14 @@ const getWallets = () => {
     fetch(url)
         .then(response => response.json())
         .then((res) => {
-            console.log('res',res)
             if(res.status == 'success'){
                 emptyInversion.innerHTML= ""
-                console.log(res.data);
                 walletList(res.data.wallet)
                 getTotals(res.data)
 
             } else{
             
-                error = `<div class="alert alert-primary text-center" role="alert">${res.mensaje}</div>`
+                error = `<div class="alert alert-danger text-center" role="alert">${res.message}</div>`
                 emptyInversion.innerHTML = error
                 hideMessage(emptyInversion)
              
@@ -27,11 +25,8 @@ const getWallets = () => {
 
 
 const walletList = (list) => {
-    console.log('list walletList:', list);
-    if (typeof list != undefined){
-        
+    if (typeof list != undefined){  
         list.forEach((obj, index) => {
-            console.log('Indice: ' + index + ' Valor: ' + obj);
             let arr = Object.entries(obj)
     
             let item = ` <li class="list-group-item d-flex justify-content-between lh-sm">
@@ -51,7 +46,6 @@ const walletList = (list) => {
 
 
 const getTotals = (list) =>{
-    console.log('list:', list);
     if (typeof list != 'string') {
 
         let actualValue = list.actual_value.toFixed(2)
