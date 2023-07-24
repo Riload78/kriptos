@@ -105,31 +105,30 @@ class MovementDAO:
     def __init__(self, db_path):
         self.path = db_path
         # Falta por comprobar -> Borrar BBDD y probar si la crea
-        if not os.path.isfile(db_path):
-            print('aqui')
-            try:
+        
+        try:
        
-                query = """
-                    CREATE TABLE IF NOT EXISTS "criptos" (
-                        "id" INTEGER,
-                        "date" TEXT NOT NULL,
-                        "time" TEXT NOT NULL,
-                        "moneda_from" TEXT NOT NULL,
-                        "cantidad_from" REAL NOT NULL,
-                        "moneda_to"	TEXT NOT NULL,
-                        "cantidad_to" REAL NOT NULL,
-                        PRIMARY KEY("id" AUTOINCREMENT)
-                    );
-                """
+            query = """
+                CREATE TABLE IF NOT EXISTS "criptos" (
+                    "id" INTEGER,
+                    "date" TEXT NOT NULL,
+                    "time" TEXT NOT NULL,
+                    "moneda_from" TEXT NOT NULL,
+                    "cantidad_from" REAL NOT NULL,
+                    "moneda_to"	TEXT NOT NULL,
+                    "cantidad_to" REAL NOT NULL,
+                    PRIMARY KEY("id" AUTOINCREMENT)
+                );
+            """
+        
+            conn = sqlite3.connect(self.path)
+            cur = conn.cursor()
+            cur.execute(query)
+            conn.commit()
+            conn.close()
             
-                conn = sqlite3.connect(self.path)
-                cur = conn.cursor()
-                cur.execute(query)
-                conn.commit()
-                conn.close()
-                
-            except sqlite3.Error as e:
-                print(f"Error al crear la tabla criptos: {e}")
+        except sqlite3.Error as e:
+            print(f"Error al crear la tabla criptos: {e}")
 
 
     def insert(self, movement):
@@ -223,10 +222,8 @@ class MovementDAO:
         res = cur.fetchone()
         conn.close()
         if res :
-            print(res)
+
             if res[0] == None:
-                print(res[0])
-          
                 return 0
             else:
                 return res[0]
@@ -250,9 +247,9 @@ class MovementDAO:
         res = cur.fetchone()
         conn.close()
         if res :
-            print(res)
+            
             if res[0] == 0:
-                print(res[0])
+
                 query = """
                     SELECT IFNULL(SUM(cantidad_to),0) AS sumatorio_to
                     FROM criptos
@@ -264,9 +261,9 @@ class MovementDAO:
                 res = cur.fetchone()
                 conn.close()
                 if res:
-                    print(res)
+                    
                     if res[0] == 0:
-                        print(res[0])
+                        
                         return 0
                     else:
                         return -res[0]

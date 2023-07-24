@@ -13,7 +13,7 @@ class Status():
 
         kriptos_from = self.get_kriptos_from()
         kriptos_to = self.get_kriptos_to()
-        if kriptos_from['status'] == 'fail':
+        if 'status' in kriptos_from :
             error = kriptos_from['message']
             new_wallet = None
             sum_actual_value = None
@@ -96,7 +96,6 @@ class Status():
             res= cur.fetchall()
             conn.close()
             data = dict(res)
-            print(data)
             return data            
             
         except Exception as e:
@@ -120,7 +119,6 @@ class Status():
             res= cur.fetchall()
             conn.close()
             data = dict(res)
-            print(data)
             return data            
             
         except Exception as e:
@@ -145,7 +143,6 @@ class Status():
             res= cur.fetchall()
             conn.close()
             data = dict(res)
-            print(data)
             result = validate_dic(data)
             return result   
         
@@ -172,7 +169,6 @@ class Status():
             res= cur.fetchall()
             conn.close()
             data = dict(res)
-            print(data)
             result = validate_dic(data)
             return result  
         

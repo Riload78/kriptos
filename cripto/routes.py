@@ -19,7 +19,7 @@ def get_all():
     try:
         # comment: 
         movements = dao.get_all()
-        if movements['status'] == 'fail':
+        if 'status' in movements:
             response = {
                 "status":"fail",
                 "message": movements['message']
