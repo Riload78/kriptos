@@ -1,8 +1,30 @@
 footer{
     width: 100%;
 }
-.btn:focus{
-    box-shadow: none;
+.btn-primary{
+    background-color: #d4b700;
+    border-color: #d4b700;
+}
+
+.btn-primary:active,
+.btn-primary:focus{
+    background-color: #d4b700;
+    border-color: #d4b700;
+}
+.btn-primary:hover{
+    background-color: #212529;
+    border-color: #212529;
+}
+.btn-primary:disabled{
+    background-color: #d4b700;
+    border-color: #d4b700;
+    opacity:.65;
+}
+
+.btn:focus,
+input:focus,
+select:focus{
+    box-shadow: none!important;
 }
 
 .result-q,
