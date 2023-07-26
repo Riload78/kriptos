@@ -104,7 +104,6 @@ class Movement:
 class MovementDAO:
     def __init__(self, db_path):
         self.path = db_path
-        # Falta por comprobar -> Borrar BBDD y probar si la crea
         
         try:
        

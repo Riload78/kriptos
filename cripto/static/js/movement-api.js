@@ -116,8 +116,8 @@ const getRate = () => {
                     resultInput.value= change
                     btnSaveMovement.disabled = false
                 } else {
-                    const msg = JSON.parse(data.message)
-                    mensaje = msg.error
+                    
+                    mensaje = data.message
                     processError(mensaje)
                 }
             })

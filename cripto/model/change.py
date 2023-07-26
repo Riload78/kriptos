@@ -24,31 +24,11 @@ class Rates():
                 res = ('status','fail'),('message', data["error"])
                 data = to_json(res)
                 return data
-        except requests.exceptions.RequestException as e:
-            return ('status','fail'), ('message',str(e))
-        
-    def get_list_cripto(self):
-        url = f"https://rest.coinapi.io/v1/assets?apikey={apikey}"
-        try:
-            response = requests.get(url)
-            data = response.content
-
-            diccionario = json.loads(data)
-
-            list_cryptos = []
-            if response.status_code == 200:
-                for cripto in diccionario:
-                    #date = convert_date(cripto['data_trade_end'])
-                   
-                    if cripto['type_is_crypto'] == 1 :
-                        list_cryptos.append((cripto['name'],cripto['asset_id']))
-                       
-                        
-                return True, list_cryptos
-            else:
-                return False, data["error"]
-        except requests.exceptions.RequestException as e:
-            return False, str(e)
+        except Exception as e:
+            res = ('status','fail'),('message', 'Error en la llamada a CoinApi.io')
+            data = to_json(res)
+            return data
+            
     
     def get_changes(self, currency):
         url =  f'https://rest.coinapi.io/v1/exchangerate/{currency}?apikey={apikey}' 
@@ -61,8 +41,6 @@ class Rates():
             new_currencies = []
             if response.status_code == 200:
                 currencies = diccionario.get('rates')
-                ## REEVISAR ESTO. TEMA DE EXPONENCIALES 
-                # No se si hay que hacerlo aqui o lugo cuando se recojan lod datos
                 
                 for currency in currencies:
                     rate_float = currency.get('rate')
@@ -73,7 +51,9 @@ class Rates():
                         'asset_id_quote': currency,
                         'rate': rate
                     })
+                    
                 return new_currencies
+            
             else: 
                 res = json.loads(response.text)
                 msg = res['error']
@@ -85,6 +65,10 @@ class Rates():
                 }
                 return error
         
-        except requests.exceptions.RequestException as e:
-            return False, str(e)
+        except Exception as e:
+            error = {
+                    'message': 'Error en la llamada a CoinApi.io',
+                    'status' : 'fail'
+                }
+            return error
         
