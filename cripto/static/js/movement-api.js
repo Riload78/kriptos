@@ -172,7 +172,7 @@ const saveMovement = () => {
 }
 
 const processInsert = (data) => {
-    console.log(data);
+    
     if(data.status === 'success') {
       
             let tableBody = document.querySelector('#movements-table tbody')
