@@ -35,5 +35,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     btnSaveMovement.addEventListener('click', saveMovement)
     updateBtn.addEventListener('click',getWallets)
     qty.addEventListener('keydown',removeAction)
+    toCurrency.addEventListener('change', validateChange)
+    fromCurrency.addEventListener('change', validateChange)
 });
 

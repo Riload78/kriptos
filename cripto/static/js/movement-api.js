@@ -231,5 +231,11 @@ const removeAction = (event) => {
     }
 }
 
+const validateChange = () => {
+    if (qty.disabled == true){
+        qty.disabled = false
+    }
+}
+
 
 
