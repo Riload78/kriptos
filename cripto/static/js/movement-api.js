@@ -116,6 +116,7 @@ const getRate = () => {
                     resultInput.value= change
                     qty.disabled = true
                     btnSaveMovement.disabled = false
+
                 } else {
                     
                     mensaje = data.message
@@ -191,6 +192,7 @@ const processInsert = (data) => {
             processSuccess(data.message)
             getWallets()
             qty.disabled = false
+            
        
 
     } else{
@@ -234,6 +236,8 @@ const removeAction = (event) => {
 const validateChange = () => {
     if (qty.disabled == true){
         qty.disabled = false
+        btnSaveMovement.disabled = true
+        processError('Tiene que calcular de nuevo el tipo de cambio')
     }
 }
 
