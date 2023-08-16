@@ -114,6 +114,7 @@ const getRate = () => {
                     const change = qtyInput / range
                     result.innerHTML = `Q: ${change}`
                     resultInput.value= change
+                    qty.disabled = true
                     btnSaveMovement.disabled = false
                 } else {
                     
@@ -189,6 +190,7 @@ const processInsert = (data) => {
             getMovements()
             processSuccess(data.message)
             getWallets()
+            qty.disabled = false
        
 
     } else{
